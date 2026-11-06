@@ -92,6 +92,9 @@
 @keyframes mark-connection { from { opacity: 0; } to { opacity: 1; } }
 
 /* A readable treatment panel at ordinary desktop zoom. */
+.intervention-copy > strong { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
+.intervention-price { display: inline-block; flex-shrink: 0; border-radius: 4px; padding: 2px 6px; font-size: 12px; line-height: 1.5; font-weight: 600; white-space: nowrap; color: #3f5b3c; background: #dfe8d6; }
+.button-cost .cost-value { font: inherit; color: inherit; }
 .play-layout { grid-template-columns: minmax(0, 1fr) 370px; }
 .treatment-panel .section-kicker { font-size: 11px; color: #596c55; letter-spacing: 1.1px; }
 .treatment-title h2 { font-size: 21px; }
@@ -247,7 +250,7 @@
       </section>
 
       <section class="metrics" aria-label="Round status">
-        <div class="metric budget"><span class="metric-label">YOUR TREATMENT BUDGET</span><div class="metric-main"><span id="coin-count">6 <span class="metric-muted">/ 6</span></span><div id="coins" class="coins" aria-label="6 coins remaining"></div></div><span class="metric-foot">Every intervention costs one coin.</span></div>
+        <div class="metric budget"><span class="metric-label">YOUR TREATMENT BUDGET</span><div class="metric-main"><span id="coin-count">6 <span class="metric-muted">/ 6</span></span><div id="coins" class="coins" aria-label="6 coins remaining"></div></div><span class="metric-foot">Node: 1 coin · edge or field: 2 coins.</span></div>
         <div class="metric"><span class="metric-label">ACTIVE SYMPTOMS</span><div class="metric-main"><span id="active-count">9<span class="metric-muted"> / 9</span></span><span id="state-tag" class="state-tag">High activity</span></div><span class="metric-foot">Switch off every symptom to win.</span></div>
         <div class="metric outlook-metric"><span class="metric-label">GREEN NODES</span><div class="metric-main"><span id="recovery-count">0<span class="metric-muted"> / 9</span></span><span class="target-label">ALL NINE TO WIN</span></div><div class="outlook-track" role="progressbar" aria-label="Inactive green nodes" aria-valuemin="0" aria-valuemax="9" aria-valuenow="0"><span id="recovery-fill"></span></div><span class="metric-foot">Get the whole network green together.</span></div>
       </section>
@@ -267,13 +270,13 @@
         <aside class="treatment-panel" aria-labelledby="treatment-heading">
           <div class="panel-heading treatment-title"><div><span class="section-kicker">YOUR NEXT MOVE</span><h2 id="treatment-heading">Choose an intervention</h2></div></div>
           <div class="intervention-list" role="group" aria-label="Intervention type">
-            <button class="intervention selected" type="button" data-type="node" aria-pressed="true"><span class="intervention-icon node-icon" aria-hidden="true">◉</span><span class="intervention-copy"><strong>Switch off a node</strong><span>A one-time push. It can turn back on.</span></span><span class="choice-indicator" aria-hidden="true"></span></button>
-            <button class="intervention" type="button" data-type="edge" aria-pressed="false"><span class="intervention-icon edge-icon" aria-hidden="true">↔</span><span class="intervention-copy"><strong>Remove an edge</strong><span>Break one connection for this round.</span></span><span class="choice-indicator" aria-hidden="true"></span></button>
-            <button class="intervention" type="button" data-type="field" aria-pressed="false"><span class="intervention-icon field-icon" aria-hidden="true">↓</span><span class="intervention-copy"><strong>Shift a node’s field</strong><span>Make a symptom less likely to activate.</span></span><span class="choice-indicator" aria-hidden="true"></span></button>
+            <button class="intervention selected" type="button" data-type="node" aria-pressed="true"><span class="intervention-icon node-icon" aria-hidden="true">◉</span><span class="intervention-copy"><strong>Switch off a node <span class="intervention-price">1 coin</span></strong><span>A one-time push. It can turn back on.</span></span><span class="choice-indicator" aria-hidden="true"></span></button>
+            <button class="intervention" type="button" data-type="edge" aria-pressed="false"><span class="intervention-icon edge-icon" aria-hidden="true">↔</span><span class="intervention-copy"><strong>Remove an edge <span class="intervention-price">2 coins</span></strong><span>Break one connection for this round.</span></span><span class="choice-indicator" aria-hidden="true"></span></button>
+            <button class="intervention" type="button" data-type="field" aria-pressed="false"><span class="intervention-icon field-icon" aria-hidden="true">↓</span><span class="intervention-copy"><strong>Shift a node’s field <span class="intervention-price">2 coins</span></strong><span>Make a symptom less likely to activate.</span></span><span class="choice-indicator" aria-hidden="true"></span></button>
           </div>
           <div class="target-box" id="target-box"><span class="section-kicker" id="target-kicker">SELECT A SYMPTOM</span><h3 id="target-name">Where will you intervene?</h3><p id="target-description">Click a coral node in the network. Switching it off gives the system a push, but does not change its connections.</p><div id="target-detail" class="target-detail" hidden></div></div>
           <div class="forecast-area"><button id="buy-forecast" class="forecast-button" type="button" disabled><span><span aria-hidden="true">⌁</span> Buy a forecast</span><span>1 coin</span></button><p id="forecast-note" class="forecast-note">Optional: spend a coin to preview your selected move.</p><div id="forecast-result" class="forecast-result" hidden aria-live="polite"></div></div>
-          <button id="apply" class="primary-button" type="button" disabled><span id="apply-label">Select a target</span><span class="button-cost"><span aria-hidden="true">◈</span> 1</span></button>
+          <button id="apply" class="primary-button" type="button" disabled><span id="apply-label">Select a target</span><span class="button-cost"><span aria-hidden="true">◈</span> <span id="treatment-cost" class="cost-value">1</span></span></button>
           <p class="timing-note">The network responds for up to two sweeps. All nine green ends the round.</p>
           <div class="round-actions"><button id="undo" class="text-button" type="button" disabled>↶ Undo move</button><button id="restart" class="text-button" type="button">↻ Restart round</button></div>
           <div id="result" class="result" role="status" hidden></div>
@@ -288,7 +291,7 @@
 
   <dialog id="learn-dialog" aria-labelledby="learn-title"><div class="dialog-content"><div class="dialog-top"><span class="eyebrow">A SHORT FIELD GUIDE</span><button class="close-button" id="close-learn" type="button" aria-label="Close the learning guide">×</button></div><h2 id="learn-title">When symptoms form a system.</h2><p class="dialog-lead">A symptom can be both a consequence and a cause. Sleep problems can contribute to fatigue; fatigue can feed other difficulties. Strong feedback can keep a network active after its original trigger has gone.</p>
     <div class="learning-grid"><section><span class="lesson-number">01</span><h3>Change a state</h3><p>A node intervention sets one symptom to <strong>inactive once</strong>. Its field and connections stay the same. If its neighbours keep supplying activation, it can switch back on—even during the next sweep.</p></section><section><span class="lesson-number">02</span><h3>Change a connection</h3><p>An edge intervention sets one interaction weight to zero for the rest of the round. It removes that direct influence in both directions. Other paths through the network remain.</p></section><section><span class="lesson-number">03</span><h3>Change a disposition</h3><p>A field intervention lowers one node’s activation parameter by 1.5 for the rest of the round. It makes activation less likely, without forcing the symptom off. You can apply it more than once to a node.</p></section></div>
-    <section class="rules-section"><h3>What counts as a win?</h3><p>Use at most six coins to get <strong>all nine nodes green at the same time</strong>. The game checks immediately after your intervention and after each response sweep. When all nine are inactive, the round ends and you earn the <strong>Loop Breaker award</strong>. One or two active symptoms still means there is work to do.</p><p>A sweep is nine random node-update opportunities; a node may be chosen more than once. Each treatment is followed by up to two sweeps, stopping as soon as the whole network is green. The green-node counter shows your current progress.</p><p><strong>A forecast is an optional tip that costs one coin.</strong> Select an intervention and its target, then buy a preview. It compares the exact chance of all nine nodes being green after six sweeps with and without that intervention. This is a fixed-horizon projection of the model, not the probability of winning at any earlier checkpoint. Buying a forecast does not apply treatment or advance the network. The forecast stays available for that selection until the next treatment; a changed network needs a new forecast. Forecasts count toward your six-coin budget and final score.</p><p>Symptoms are binary and their updates are stochastic: a good forecast is not a promise. Restart reuses the same random sequence, so you can compare strategies; undo also restores the random sequence and refunds the undone action. Forecast probabilities are calculated exactly, not estimated from repeated simulations.</p><p>The all-green goal is a game rule, not a clinical diagnostic or recovery criterion. The nine nodes group the nine depression symptom criteria; the weights and fields are illustrative, not fitted patient data or the original Cramer network.</p></section>
+    <section class="rules-section"><h3>What counts as a win?</h3><p>Use at most six coins to get <strong>all nine nodes green at the same time</strong>. The game checks immediately after your intervention and after each response sweep. When all nine are inactive, the round ends and you earn the <strong>Loop Breaker award</strong>. One or two active symptoms still means there is work to do.</p><p><strong>Node switches cost 1 coin. Edge removals and field shifts cost 2 coins each.</strong> The six-coin budget counts what you spend, and undo refunds the full price of the last action. You need enough coins to pay for a treatment before applying it.</p><p>A sweep is nine random node-update opportunities; a node may be chosen more than once. Each treatment is followed by up to two sweeps, stopping as soon as the whole network is green. The green-node counter shows your current progress.</p><p><strong>A forecast is an optional tip that costs one coin.</strong> Select an intervention and its target, then buy a preview. It compares the exact chance of all nine nodes being green after six sweeps with and without that intervention. This is a fixed-horizon projection of the model, not the probability of winning at any earlier checkpoint. Buying a forecast does not apply treatment or advance the network. The forecast stays available for that selection until the next treatment; a changed network needs a new forecast. Forecasts count toward your six-coin budget and final score.</p><p>Symptoms are binary and their updates are stochastic: a good forecast is not a promise. Restart reuses the same random sequence, so you can compare strategies; undo also restores the random sequence and refunds the undone action. Forecast probabilities are calculated exactly, not estimated from repeated simulations.</p><p>The all-green goal is a game rule, not a clinical diagnostic or recovery criterion. The nine nodes group the nine depression symptom criteria; the weights and fields are illustrative, not fitted patient data or the original Cramer network.</p></section>
     <details><summary>The model, in a little more detail</summary><div class="model-details"><p>We use a 0/1-coded Ising model. For the selected node <em>i</em>, the probability of being active on its next update is:</p><div class="formula">pᵢ = 1 / [1 + exp(−(τᵢ + Σⱼ wᵢⱼ xⱼ))]</div><p>Lowering τᵢ reduces activation, matching the NIRA activation-parameter convention. Each update chooses one node uniformly at random. This single-site Gibbs rule has stationary probability:</p><div class="formula">P(x) ∝ exp(Σᵢ τᵢ xᵢ + Σᵢ&lt;ⱼ wᵢⱼ xᵢ xⱼ)</div><p>With nine binary nodes there are 512 states. We propagate probability across all states for 54 updates to calculate the six-sweep outlook exactly. A node intervention moves the current state only; an edge or field intervention changes the transition probabilities.</p><p>This is inspired by Cramer et al.’s dynamic framework, using asynchronous updates consistent with the joint Ising distribution rather than reproducing their synchronous update rule. The supplied Epskamp chapter uses −1/+1 coding in Equation 8; our parameters are defined directly in 0/1 coding and are not copied across conventions.</p></div></details>
     <section class="references"><h3>Ideas behind the game</h3><p>Borsboom (2017). <em>A network theory of mental disorders.</em> World Psychiatry, 16, 5–13. DOI: 10.1002/wps.20375.</p><p>Cramer et al. (2016). <em>Major Depression as a Complex Dynamic System.</em> PLOS ONE, 11, e0167490. DOI: 10.1371/journal.pone.0167490.</p><p>Epskamp, Maris, Waldorp &amp; Borsboom. <em>Network Psychometrics.</em> Supplied chapter, arXiv:1609.02818v2.</p><p>Lunansky et al. <em>Intervening on psychopathology networks: Evaluating intervention targets through simulations.</em> Methods. Supplied NIRA paper.</p></section>
     <button id="back-to-game" class="primary-button" type="button">Back to the network <span aria-hidden="true">↗</span></button>
@@ -447,6 +450,8 @@
   const $ = id => document.getElementById(id);
   const svgNS = 'http://www.w3.org/2000/svg';
   const budget = 6;
+  const treatmentCosts = Object.freeze({ node: 1, edge: 2, field: 2 });
+  const forecastCost = 1;
   const seed = 271828;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, reducedMotion ? 450 : milliseconds));
@@ -503,6 +508,9 @@
     return true;
   }
   function isWon() { return state === 0; }
+  function coinsSpent() { return history.reduce((sum, entry) => sum + entry.cost, 0); }
+  function coinsRemaining() { return budget - coinsSpent() - (phase === 'busy' ? treatmentCosts[type] : 0); }
+  function coinLabel(amount) { return `${amount} ${amount === 1 ? 'coin' : 'coins'}`; }
 
   function drawNetwork(previousState = state, interventionTarget = null) {
     const svg = $('network');
@@ -587,8 +595,8 @@
   }
 
   function renderStats() {
-    const spent = history.length + (phase === 'busy' ? 1 : 0);
-    const remaining = budget - spent;
+    const remaining = coinsRemaining();
+    const spent = budget - remaining;
     $('coin-count').replaceChildren(document.createTextNode(`${remaining} `), element('span', 'metric-muted', `/ ${budget}`));
     const coins = $('coins');
     coins.replaceChildren();
@@ -622,7 +630,7 @@
       column.append(element('strong', '', percent(probability)), element('span', '', label));
       comparison.append(column);
     }
-    area.append(comparison, element('p', '', 'Chance of all nine nodes being green after six sweeps. A probability, not a promise. Treatment still costs its own coin.'));
+    area.append(comparison, element('p', '', `Chance of all nine nodes being green after six sweeps. A probability, not a promise. Applying this treatment costs ${coinLabel(treatmentCosts[type])}.`));
   }
 
   function renderSelection() {
@@ -631,7 +639,11 @@
       button.classList.toggle('selected', selected);
       button.setAttribute('aria-pressed', String(selected));
       button.disabled = phase === 'busy' || phase === 'won';
+      button.querySelector('.intervention-price').textContent = coinLabel(treatmentCosts[button.dataset.type]);
     });
+    const price = treatmentCosts[type];
+    const remaining = coinsRemaining();
+    $('treatment-cost').textContent = String(price);
     const hasTarget = target !== null;
     $('target-kicker').textContent = hasTarget ? (type === 'edge' ? 'SELECTED CONNECTION' : 'SELECTED SYMPTOM') : (type === 'edge' ? 'SELECT A CONNECTION' : 'SELECT A SYMPTOM');
     $('target-name').textContent = hasTarget ? targetName(type, target) : 'Where will you intervene?';
@@ -640,13 +652,13 @@
     if (hasTarget) {
       if (type === 'node') {
         description = M.isOn(state, target) ? 'Switch this symptom off once. It will be free to reactivate when the network evolves.' : 'This symptom is already inactive. Choose an active symptom to switch off, or try a field intervention.';
-        detail = 'One-time state change · 1 coin';
+        detail = `One-time state change · ${coinLabel(price)}`;
       } else if (type === 'edge') {
         description = 'Remove this connection in both directions. The two symptoms can still influence each other through other paths.';
-        detail = 'Lasts for this round · 1 coin';
+        detail = `Lasts for this round · ${coinLabel(price)}`;
       } else {
         description = 'Lower this symptom’s activation parameter. Its tendency to switch on decreases, but its current state is not forced to change.';
-        detail = `Lasts for this round · ${model.fieldDoses[target]} previous ${model.fieldDoses[target] === 1 ? 'shift' : 'shifts'} · 1 coin`;
+        detail = `Lasts for this round · ${model.fieldDoses[target]} previous ${model.fieldDoses[target] === 1 ? 'shift' : 'shifts'} · ${coinLabel(price)}`;
       }
     }
     if (phase === 'busy' && turnAnimation) {
@@ -654,24 +666,24 @@
       if (turnAnimation.stage === 'applied') {
         description = type === 'node' ? 'This symptom is now off. Your move registered. Next, its neighbours will have a chance to reactivate it.' : type === 'edge' ? 'This connection has been removed. Next, watch how the network responds without this direct influence.' : 'The activation field has been lowered. The symptom is less likely to switch on; its current state is not forced to change.';
       } else description = type === 'node' && M.isOn(state, target) ? 'The symptom has reactivated after your move. It was successfully switched off; the network then turned it back on.' : `The intervention was applied. You are now watching the network’s response: sweep ${turnAnimation.sweep} of 2.`;
-      detail = '1 coin spent · Treatment applied';
+      detail = `${coinLabel(price)} spent · Treatment applied`;
     }
     if (phase === 'won') {
       $('target-kicker').textContent = 'ROUND COMPLETE';
       $('target-name').textContent = 'All nine nodes are green';
       description = 'You earned the Loop Breaker award. The network has stopped. Replay to try a cheaper path, or undo to revisit your final move.';
-      detail = `${history.length} ${history.length === 1 ? 'coin' : 'coins'} spent · ${budget - history.length} saved`;
+      detail = `${coinLabel(coinsSpent())} spent · ${budget - coinsSpent()} saved`;
     }
     $('target-description').textContent = description;
     $('target-detail').textContent = detail;
     $('target-detail').hidden = !detail;
-    const enabled = validTarget() && phase === 'playing' && history.length < budget;
-    $('apply').disabled = !enabled;
-    $('apply-label').textContent = phase === 'busy' ? (turnAnimation?.stage === 'applied' ? '✓ Move applied' : 'Network responding…') : phase === 'won' ? 'Loop broken' : phase === 'exhausted' ? 'No coins left' : !validTarget() ? 'Select a target' : type === 'node' ? 'Switch symptom off' : type === 'edge' ? 'Remove connection' : 'Shift this field';
+    const enabled = validTarget() && phase === 'playing';
+    $('apply').disabled = !enabled || remaining < price;
+    $('apply-label').textContent = phase === 'busy' ? (turnAnimation?.stage === 'applied' ? '✓ Move applied' : 'Network responding…') : phase === 'won' ? 'Loop broken' : phase === 'exhausted' ? 'No coins left' : !validTarget() ? 'Select a target' : remaining < price ? `Need ${coinLabel(price)}` : type === 'node' ? 'Switch symptom off' : type === 'edge' ? 'Remove connection' : 'Shift this field';
     const cached = purchased.has(cacheKey());
-    $('buy-forecast').disabled = !enabled || cached;
+    $('buy-forecast').disabled = !enabled || remaining < forecastCost || cached;
     $('buy-forecast').firstElementChild.lastChild.textContent = cached ? ' Forecast purchased' : ' Buy a forecast';
-    $('forecast-note').textContent = phase === 'won' ? 'Your network is all green. The round is complete.' : cached ? 'Paid once. You can review this tip until the next treatment.' : history.length === budget - 1 ? 'This uses your last coin, leaving none for treatment.' : 'Optional: spend a coin to preview your selected move.';
+    $('forecast-note').textContent = phase === 'won' ? 'Your network is all green. The round is complete.' : cached ? 'Paid once. You can review this tip until the next treatment.' : remaining === forecastCost ? 'This uses your last coin, leaving none for treatment.' : enabled && remaining - forecastCost < price ? `A forecast leaves too few coins for this ${price}-coin treatment.` : 'Optional: spend a coin to preview your selected move.';
     renderForecast();
   }
 
@@ -691,11 +703,11 @@
       const actionLabel = entry.kind === 'forecast' ? 'Forecast purchased' : entry.type === 'node' ? 'Switched off' : entry.type === 'edge' ? 'Connection removed' : 'Field shifted';
       description.append(element('strong', '', `${actionLabel} · ${targetName(entry.type, entry.target)}`));
       if (entry.kind === 'forecast') {
-        description.append(element('small', '', 'A paid tip. The network did not advance.'));
+        description.append(element('small', '', `${coinLabel(entry.cost)} · A paid tip. The network did not advance.`));
         row.append(description, element('span', 'history-forecast', `${percent(entry.forecast.projected)} predicted`));
       } else {
         const reactivated = entry.type === 'node' && M.isOn(entry.finalState, entry.target);
-        description.append(element('small', '', `${entry.sweepCounts.length ? `Sweep checks: ${entry.sweepCounts.join(' → ')} active` : 'All green immediately after the intervention'}${reactivated ? ' · Target reactivated' : ''}`));
+        description.append(element('small', '', `${coinLabel(entry.cost)} · ${entry.sweepCounts.length ? `Sweep checks: ${entry.sweepCounts.join(' → ')} active` : 'All green immediately after the intervention'}${reactivated ? ' · Target reactivated' : ''}`));
         row.append(description, element('span', 'history-activity', `${M.activeCount(entry.beforeState)} → ${M.activeCount(entry.finalState)} active`));
       }
       list.append(row);
@@ -710,7 +722,7 @@
     if (result.hidden) return;
     if (phase === 'won') {
       const tips = history.filter(entry => entry.kind === 'forecast').length;
-      result.append(element('h3', '', 'You broke the loop.'), element('p', '', `All nine nodes are green. You spent ${history.length} of ${budget} coins, including ${tips} ${tips === 1 ? 'forecast' : 'forecasts'}. Your Loop Breaker award is yours!`));
+      result.append(element('h3', '', 'You broke the loop.'), element('p', '', `All nine nodes are green. You spent ${coinsSpent()} of ${budget} coins, including ${tips} ${tips === 1 ? 'forecast' : 'forecasts'}. Your Loop Breaker award is yours!`));
     } else result.append(element('h3', '', 'A new strategy?'), element('p', '', 'Your coins are spent and the recovery goal is not yet met. Undo a move or restart to try a different path.'));
     const again = element('button', 'text-button', 'Replay this network ↗');
     again.type = 'button';
@@ -731,7 +743,7 @@
       particles.replaceChildren();
       return;
     }
-    $('award-score').textContent = `${history.length} ${history.length === 1 ? 'coin' : 'coins'} spent · ${budget - history.length} saved`;
+    $('award-score').textContent = `${coinLabel(coinsSpent())} spent · ${budget - coinsSpent()} saved`;
     if (celebrationPlayed) return;
     celebrationPlayed = true;
     if (!reducedMotion) {
@@ -771,8 +783,8 @@
   }
 
   async function applyTreatment() {
-    if (phase !== 'playing' || !validTarget() || history.length >= budget) return;
-    const entry = { kind: 'treatment', type, target, beforeState: state, sweepCounts: [] };
+    if (phase !== 'playing' || !validTarget() || coinsRemaining() < treatmentCosts[type]) return;
+    const entry = { kind: 'treatment', type, target, cost: treatmentCosts[type], beforeState: state, sweepCounts: [] };
     const label = targetName(type, target);
     phase = 'busy';
     const previousState = state;
@@ -780,7 +792,7 @@
     purchased.clear();
     treatmentVersion++;
     turnAnimation = { type, target, stage: 'applied' };
-    setMessage(type === 'node' ? 'The symptom is off. The network is paused briefly so you can see the effect of your move.' : type === 'edge' ? 'This direct connection is now removed. The network will respond next.' : 'Its activation field is now lower. The network will respond next.', type === 'node' ? `✓ ${label} switched off · 1 coin spent` : type === 'edge' ? '✓ Connection removed · 1 coin spent' : `✓ ${label}: field lowered · 1 coin spent`);
+    setMessage(type === 'node' ? 'The symptom is off. The network is paused briefly so you can see the effect of your move.' : type === 'edge' ? 'This direct connection is now removed. The network will respond next.' : 'Its activation field is now lower. The network will respond next.', type === 'node' ? `✓ ${label} switched off · ${coinLabel(entry.cost)} spent` : type === 'edge' ? `✓ Connection removed · ${coinLabel(entry.cost)} spent` : `✓ ${label}: field lowered · ${coinLabel(entry.cost)} spent`);
     render(previousState, type === 'node' ? target : null);
     const visibleTarget = $('network').querySelector(type === 'edge' ? '.edge-cut' : `[data-node="${target}"]`);
     if (visibleTarget) {
@@ -804,22 +816,22 @@
     entry.finalState = state;
     history.push(entry);
     turnAnimation = null;
-    phase = isWon() ? 'won' : history.length >= budget ? 'exhausted' : 'playing';
+    phase = isWon() ? 'won' : coinsSpent() >= budget ? 'exhausted' : 'playing';
     const reactivated = entry.type === 'node' && M.isOn(state, entry.target);
     setMessage(phase === 'won' ? 'All nine nodes are green together. You earned the Loop Breaker award!' : `${entry.sweepCounts.join(' → ')} active symptoms across the two sweep checks.${reactivated ? ' The switch-off registered; the feedback loop then turned the symptom back on.' : ' Choose your next move.'}`, phase === 'won' ? 'You broke the loop.' : reactivated ? `Move applied → ${label} reactivated` : 'Move applied · network response complete');
     render();
   }
 
   function buyForecast() {
-    if (phase !== 'playing' || !validTarget() || history.length >= budget || purchased.has(cacheKey())) return;
+    if (phase !== 'playing' || !validTarget() || coinsRemaining() < forecastCost || purchased.has(cacheKey())) return;
     const baseline = M.forecast(model, state).healthyProbability;
     const alteredModel = { edges: model.edges.map(e => ({ ...e })), thresholds: [...model.thresholds], fieldDoses: [...model.fieldDoses] };
     const alteredState = M.intervene(alteredModel, state, type, target);
     const projected = M.forecast(alteredModel, alteredState).healthyProbability;
     const forecast = { baseline, projected };
     purchased.set(cacheKey(), forecast);
-    history.push({ kind: 'forecast', type, target, forecast });
-    if (history.length >= budget) phase = 'exhausted';
+    history.push({ kind: 'forecast', type, target, cost: forecastCost, forecast });
+    if (coinsSpent() >= budget) phase = 'exhausted';
     setMessage(`Forecast purchased for one coin. ${targetName(type, target)}: ${percent(projected)} chance of all nine nodes being green after six sweeps if you apply this intervention. The network has not advanced.`);
     renderStats(); renderSelection(); renderHistory(); renderResult();
   }
@@ -838,6 +850,7 @@
 
   function undo() {
     if (phase === 'busy' || !history.length) return;
+    const refund = history[history.length - 1].cost;
     const retained = history.slice(0, -1);
     resetModel();
     for (const entry of retained) {
@@ -853,7 +866,7 @@
       history.push(entry);
     }
     target = null;
-    setMessage('Last action undone and its coin refunded. The network and random sequence are restored.');
+    setMessage(`Last action undone and ${coinLabel(refund)} refunded. The network and random sequence are restored.`);
     render();
   }
 

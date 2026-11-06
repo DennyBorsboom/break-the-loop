@@ -3,11 +3,31 @@
   "subtitle": "A treatment-strategy game about symptom feedback and the network theory of mental disorders.",
   "type": "PLAY_LEARN",
   "level": "upper_undergrad",
-  "domain": ["Social Sciences", "Interdisciplinary"],
-  "field": ["Psychology", "Complexity Science"],
-  "subdiscipline": ["Clinical science and psychopathology", "Quantitative psychology", "Network science", "Dynamical systems"],
+  "domain": [
+    "Social Sciences",
+    "Interdisciplinary"
+  ],
+  "field": [
+    "Psychology",
+    "Complexity Science"
+  ],
+  "subdiscipline": [
+    "Clinical science and psychopathology",
+    "Quantitative psychology",
+    "Network science",
+    "Dynamical systems"
+  ],
   "mode": "both",
-  "keywords": ["depression", "symptom networks", "Ising model", "feedback", "intervention", "mental disorders", "network theory", "NIRA"],
+  "keywords": [
+    "depression",
+    "symptom networks",
+    "Ising model",
+    "feedback",
+    "intervention",
+    "mental disorders",
+    "network theory",
+    "NIRA"
+  ],
   "learning_goals": [
     "Explain how reinforcing interactions between symptoms can sustain a high-activity network state.",
     "Distinguish a one-time symptom intervention from changes to an interaction or a node's activation field.",
@@ -16,5 +36,5 @@
   "creator": "Denny Borsboom",
   "institution": "University of Amsterdam",
   "license": "CC-BY-4.0",
-  "notes": "Prototype for review. Nine illustrative criteria-level nodes, not fitted patient data or a reproduction of Cramer et al.'s 14-node network. Random-scan Gibbs dynamics use a 0/1 Ising model. Paid forecasts enumerate 512 states exactly and show the all-inactive probability after six sweeps; they cost one coin and do not advance time. Node switches are one-time events; edge removal and 1.5-unit activation-field reductions last for the round. Win only when all nine nodes are inactive together, checked after an intervention and each response sweep. A trophy and brief confetti burst celebrate the win. Creator, affiliation and default license are draft submission metadata to review before uploading."
+  "notes": "Prototype for review. Nine illustrative criteria-level nodes, not fitted patient data or a reproduction of Cramer et al.'s 14-node network. Random-scan Gibbs dynamics use a 0/1 Ising model. Paid forecasts enumerate 512 states exactly and show the all-inactive probability after six sweeps; they cost one coin and do not advance time. Node switches cost 1 coin and are one-time events; edge removal and 1.5-unit activation-field reductions cost 2 coins each and last for the round. The budget and score sum action prices, and undo refunds the full action price. Win only when all nine nodes are inactive together, checked after an intervention and each response sweep. A trophy and brief confetti burst celebrate the win. Creator, affiliation and default license are draft submission metadata to review before uploading."
 }

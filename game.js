@@ -4,6 +4,8 @@
   const $ = id => document.getElementById(id);
   const svgNS = 'http://www.w3.org/2000/svg';
   const budget = 6;
+  const treatmentCosts = Object.freeze({ node: 1, edge: 2, field: 2 });
+  const forecastCost = 1;
   const seed = 271828;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, reducedMotion ? 450 : milliseconds));
@@ -60,6 +62,9 @@
     return true;
   }
   function isWon() { return state === 0; }
+  function coinsSpent() { return history.reduce((sum, entry) => sum + entry.cost, 0); }
+  function coinsRemaining() { return budget - coinsSpent() - (phase === 'busy' ? treatmentCosts[type] : 0); }
+  function coinLabel(amount) { return `${amount} ${amount === 1 ? 'coin' : 'coins'}`; }
 
   function drawNetwork(previousState = state, interventionTarget = null) {
     const svg = $('network');
@@ -144,8 +149,8 @@
   }
 
   function renderStats() {
-    const spent = history.length + (phase === 'busy' ? 1 : 0);
-    const remaining = budget - spent;
+    const remaining = coinsRemaining();
+    const spent = budget - remaining;
     $('coin-count').replaceChildren(document.createTextNode(`${remaining} `), element('span', 'metric-muted', `/ ${budget}`));
     const coins = $('coins');
     coins.replaceChildren();
@@ -179,7 +184,7 @@
       column.append(element('strong', '', percent(probability)), element('span', '', label));
       comparison.append(column);
     }
-    area.append(comparison, element('p', '', 'Chance of all nine nodes being green after six sweeps. A probability, not a promise. Treatment still costs its own coin.'));
+    area.append(comparison, element('p', '', `Chance of all nine nodes being green after six sweeps. A probability, not a promise. Applying this treatment costs ${coinLabel(treatmentCosts[type])}.`));
   }
 
   function renderSelection() {
@@ -188,7 +193,11 @@
       button.classList.toggle('selected', selected);
       button.setAttribute('aria-pressed', String(selected));
       button.disabled = phase === 'busy' || phase === 'won';
+      button.querySelector('.intervention-price').textContent = coinLabel(treatmentCosts[button.dataset.type]);
     });
+    const price = treatmentCosts[type];
+    const remaining = coinsRemaining();
+    $('treatment-cost').textContent = String(price);
     const hasTarget = target !== null;
     $('target-kicker').textContent = hasTarget ? (type === 'edge' ? 'SELECTED CONNECTION' : 'SELECTED SYMPTOM') : (type === 'edge' ? 'SELECT A CONNECTION' : 'SELECT A SYMPTOM');
     $('target-name').textContent = hasTarget ? targetName(type, target) : 'Where will you intervene?';
@@ -197,13 +206,13 @@
     if (hasTarget) {
       if (type === 'node') {
         description = M.isOn(state, target) ? 'Switch this symptom off once. It will be free to reactivate when the network evolves.' : 'This symptom is already inactive. Choose an active symptom to switch off, or try a field intervention.';
-        detail = 'One-time state change · 1 coin';
+        detail = `One-time state change · ${coinLabel(price)}`;
       } else if (type === 'edge') {
         description = 'Remove this connection in both directions. The two symptoms can still influence each other through other paths.';
-        detail = 'Lasts for this round · 1 coin';
+        detail = `Lasts for this round · ${coinLabel(price)}`;
       } else {
         description = 'Lower this symptom’s activation parameter. Its tendency to switch on decreases, but its current state is not forced to change.';
-        detail = `Lasts for this round · ${model.fieldDoses[target]} previous ${model.fieldDoses[target] === 1 ? 'shift' : 'shifts'} · 1 coin`;
+        detail = `Lasts for this round · ${model.fieldDoses[target]} previous ${model.fieldDoses[target] === 1 ? 'shift' : 'shifts'} · ${coinLabel(price)}`;
       }
     }
     if (phase === 'busy' && turnAnimation) {
@@ -211,24 +220,24 @@
       if (turnAnimation.stage === 'applied') {
         description = type === 'node' ? 'This symptom is now off. Your move registered. Next, its neighbours will have a chance to reactivate it.' : type === 'edge' ? 'This connection has been removed. Next, watch how the network responds without this direct influence.' : 'The activation field has been lowered. The symptom is less likely to switch on; its current state is not forced to change.';
       } else description = type === 'node' && M.isOn(state, target) ? 'The symptom has reactivated after your move. It was successfully switched off; the network then turned it back on.' : `The intervention was applied. You are now watching the network’s response: sweep ${turnAnimation.sweep} of 2.`;
-      detail = '1 coin spent · Treatment applied';
+      detail = `${coinLabel(price)} spent · Treatment applied`;
     }
     if (phase === 'won') {
       $('target-kicker').textContent = 'ROUND COMPLETE';
       $('target-name').textContent = 'All nine nodes are green';
       description = 'You earned the Loop Breaker award. The network has stopped. Replay to try a cheaper path, or undo to revisit your final move.';
-      detail = `${history.length} ${history.length === 1 ? 'coin' : 'coins'} spent · ${budget - history.length} saved`;
+      detail = `${coinLabel(coinsSpent())} spent · ${budget - coinsSpent()} saved`;
     }
     $('target-description').textContent = description;
     $('target-detail').textContent = detail;
     $('target-detail').hidden = !detail;
-    const enabled = validTarget() && phase === 'playing' && history.length < budget;
-    $('apply').disabled = !enabled;
-    $('apply-label').textContent = phase === 'busy' ? (turnAnimation?.stage === 'applied' ? '✓ Move applied' : 'Network responding…') : phase === 'won' ? 'Loop broken' : phase === 'exhausted' ? 'No coins left' : !validTarget() ? 'Select a target' : type === 'node' ? 'Switch symptom off' : type === 'edge' ? 'Remove connection' : 'Shift this field';
+    const enabled = validTarget() && phase === 'playing';
+    $('apply').disabled = !enabled || remaining < price;
+    $('apply-label').textContent = phase === 'busy' ? (turnAnimation?.stage === 'applied' ? '✓ Move applied' : 'Network responding…') : phase === 'won' ? 'Loop broken' : phase === 'exhausted' ? 'No coins left' : !validTarget() ? 'Select a target' : remaining < price ? `Need ${coinLabel(price)}` : type === 'node' ? 'Switch symptom off' : type === 'edge' ? 'Remove connection' : 'Shift this field';
     const cached = purchased.has(cacheKey());
-    $('buy-forecast').disabled = !enabled || cached;
+    $('buy-forecast').disabled = !enabled || remaining < forecastCost || cached;
     $('buy-forecast').firstElementChild.lastChild.textContent = cached ? ' Forecast purchased' : ' Buy a forecast';
-    $('forecast-note').textContent = phase === 'won' ? 'Your network is all green. The round is complete.' : cached ? 'Paid once. You can review this tip until the next treatment.' : history.length === budget - 1 ? 'This uses your last coin, leaving none for treatment.' : 'Optional: spend a coin to preview your selected move.';
+    $('forecast-note').textContent = phase === 'won' ? 'Your network is all green. The round is complete.' : cached ? 'Paid once. You can review this tip until the next treatment.' : remaining === forecastCost ? 'This uses your last coin, leaving none for treatment.' : enabled && remaining - forecastCost < price ? `A forecast leaves too few coins for this ${price}-coin treatment.` : 'Optional: spend a coin to preview your selected move.';
     renderForecast();
   }
 
@@ -248,11 +257,11 @@
       const actionLabel = entry.kind === 'forecast' ? 'Forecast purchased' : entry.type === 'node' ? 'Switched off' : entry.type === 'edge' ? 'Connection removed' : 'Field shifted';
       description.append(element('strong', '', `${actionLabel} · ${targetName(entry.type, entry.target)}`));
       if (entry.kind === 'forecast') {
-        description.append(element('small', '', 'A paid tip. The network did not advance.'));
+        description.append(element('small', '', `${coinLabel(entry.cost)} · A paid tip. The network did not advance.`));
         row.append(description, element('span', 'history-forecast', `${percent(entry.forecast.projected)} predicted`));
       } else {
         const reactivated = entry.type === 'node' && M.isOn(entry.finalState, entry.target);
-        description.append(element('small', '', `${entry.sweepCounts.length ? `Sweep checks: ${entry.sweepCounts.join(' → ')} active` : 'All green immediately after the intervention'}${reactivated ? ' · Target reactivated' : ''}`));
+        description.append(element('small', '', `${coinLabel(entry.cost)} · ${entry.sweepCounts.length ? `Sweep checks: ${entry.sweepCounts.join(' → ')} active` : 'All green immediately after the intervention'}${reactivated ? ' · Target reactivated' : ''}`));
         row.append(description, element('span', 'history-activity', `${M.activeCount(entry.beforeState)} → ${M.activeCount(entry.finalState)} active`));
       }
       list.append(row);
@@ -267,7 +276,7 @@
     if (result.hidden) return;
     if (phase === 'won') {
       const tips = history.filter(entry => entry.kind === 'forecast').length;
-      result.append(element('h3', '', 'You broke the loop.'), element('p', '', `All nine nodes are green. You spent ${history.length} of ${budget} coins, including ${tips} ${tips === 1 ? 'forecast' : 'forecasts'}. Your Loop Breaker award is yours!`));
+      result.append(element('h3', '', 'You broke the loop.'), element('p', '', `All nine nodes are green. You spent ${coinsSpent()} of ${budget} coins, including ${tips} ${tips === 1 ? 'forecast' : 'forecasts'}. Your Loop Breaker award is yours!`));
     } else result.append(element('h3', '', 'A new strategy?'), element('p', '', 'Your coins are spent and the recovery goal is not yet met. Undo a move or restart to try a different path.'));
     const again = element('button', 'text-button', 'Replay this network ↗');
     again.type = 'button';
@@ -288,7 +297,7 @@
       particles.replaceChildren();
       return;
     }
-    $('award-score').textContent = `${history.length} ${history.length === 1 ? 'coin' : 'coins'} spent · ${budget - history.length} saved`;
+    $('award-score').textContent = `${coinLabel(coinsSpent())} spent · ${budget - coinsSpent()} saved`;
     if (celebrationPlayed) return;
     celebrationPlayed = true;
     if (!reducedMotion) {
@@ -328,8 +337,8 @@
   }
 
   async function applyTreatment() {
-    if (phase !== 'playing' || !validTarget() || history.length >= budget) return;
-    const entry = { kind: 'treatment', type, target, beforeState: state, sweepCounts: [] };
+    if (phase !== 'playing' || !validTarget() || coinsRemaining() < treatmentCosts[type]) return;
+    const entry = { kind: 'treatment', type, target, cost: treatmentCosts[type], beforeState: state, sweepCounts: [] };
     const label = targetName(type, target);
     phase = 'busy';
     const previousState = state;
@@ -337,7 +346,7 @@
     purchased.clear();
     treatmentVersion++;
     turnAnimation = { type, target, stage: 'applied' };
-    setMessage(type === 'node' ? 'The symptom is off. The network is paused briefly so you can see the effect of your move.' : type === 'edge' ? 'This direct connection is now removed. The network will respond next.' : 'Its activation field is now lower. The network will respond next.', type === 'node' ? `✓ ${label} switched off · 1 coin spent` : type === 'edge' ? '✓ Connection removed · 1 coin spent' : `✓ ${label}: field lowered · 1 coin spent`);
+    setMessage(type === 'node' ? 'The symptom is off. The network is paused briefly so you can see the effect of your move.' : type === 'edge' ? 'This direct connection is now removed. The network will respond next.' : 'Its activation field is now lower. The network will respond next.', type === 'node' ? `✓ ${label} switched off · ${coinLabel(entry.cost)} spent` : type === 'edge' ? `✓ Connection removed · ${coinLabel(entry.cost)} spent` : `✓ ${label}: field lowered · ${coinLabel(entry.cost)} spent`);
     render(previousState, type === 'node' ? target : null);
     const visibleTarget = $('network').querySelector(type === 'edge' ? '.edge-cut' : `[data-node="${target}"]`);
     if (visibleTarget) {
@@ -361,22 +370,22 @@
     entry.finalState = state;
     history.push(entry);
     turnAnimation = null;
-    phase = isWon() ? 'won' : history.length >= budget ? 'exhausted' : 'playing';
+    phase = isWon() ? 'won' : coinsSpent() >= budget ? 'exhausted' : 'playing';
     const reactivated = entry.type === 'node' && M.isOn(state, entry.target);
     setMessage(phase === 'won' ? 'All nine nodes are green together. You earned the Loop Breaker award!' : `${entry.sweepCounts.join(' → ')} active symptoms across the two sweep checks.${reactivated ? ' The switch-off registered; the feedback loop then turned the symptom back on.' : ' Choose your next move.'}`, phase === 'won' ? 'You broke the loop.' : reactivated ? `Move applied → ${label} reactivated` : 'Move applied · network response complete');
     render();
   }
 
   function buyForecast() {
-    if (phase !== 'playing' || !validTarget() || history.length >= budget || purchased.has(cacheKey())) return;
+    if (phase !== 'playing' || !validTarget() || coinsRemaining() < forecastCost || purchased.has(cacheKey())) return;
     const baseline = M.forecast(model, state).healthyProbability;
     const alteredModel = { edges: model.edges.map(e => ({ ...e })), thresholds: [...model.thresholds], fieldDoses: [...model.fieldDoses] };
     const alteredState = M.intervene(alteredModel, state, type, target);
     const projected = M.forecast(alteredModel, alteredState).healthyProbability;
     const forecast = { baseline, projected };
     purchased.set(cacheKey(), forecast);
-    history.push({ kind: 'forecast', type, target, forecast });
-    if (history.length >= budget) phase = 'exhausted';
+    history.push({ kind: 'forecast', type, target, cost: forecastCost, forecast });
+    if (coinsSpent() >= budget) phase = 'exhausted';
     setMessage(`Forecast purchased for one coin. ${targetName(type, target)}: ${percent(projected)} chance of all nine nodes being green after six sweeps if you apply this intervention. The network has not advanced.`);
     renderStats(); renderSelection(); renderHistory(); renderResult();
   }
@@ -395,6 +404,7 @@
 
   function undo() {
     if (phase === 'busy' || !history.length) return;
+    const refund = history[history.length - 1].cost;
     const retained = history.slice(0, -1);
     resetModel();
     for (const entry of retained) {
@@ -410,7 +420,7 @@
       history.push(entry);
     }
     target = null;
-    setMessage('Last action undone and its coin refunded. The network and random sequence are restored.');
+    setMessage(`Last action undone and ${coinLabel(refund)} refunded. The network and random sequence are restored.`);
     render();
   }
 

@@ -10,15 +10,15 @@ The game runs in a browser. No account, installation, or API key is needed.
 
 Choose an intervention and click its target in the network:
 
-- **Switch off a node:** make a symptom inactive once. Its neighbours can reactivate it.
-- **Remove an edge:** remove one symmetric connection for the round.
-- **Shift a field:** lower a node's activation parameter by 1.5 for the round. This reduces its tendency to become active; it does not force its current state.
+- **Switch off a node (1 coin):** make a symptom inactive once. Its neighbours can reactivate it.
+- **Remove an edge (2 coins):** remove one symmetric connection for the round.
+- **Shift a field (2 coins):** lower a node's activation parameter by 1.5 for the round. This reduces its tendency to become active; it does not force its current state.
 
-Each intervention costs one coin. The move is shown first, then the network responds for up to two sweeps. A sweep consists of nine random node-update opportunities. When all nine nodes are green together, the round ends with a Loop Breaker trophy and confetti.
+The six-coin budget counts coins spent, rather than the number of actions. A treatment must be affordable at its full price. The move is shown first, then the network responds for up to two sweeps. A sweep consists of nine random node-update opportunities. When all nine nodes are green together, the round ends with a Loop Breaker trophy and confetti.
 
 An optional **forecast costs one additional coin**. It compares the exact chance of all nine nodes being green after six sweeps, with and without the selected intervention. Buying it does not apply treatment or advance time. It is a fixed-horizon prediction, rather than the probability of winning at any earlier checkpoint.
 
-Undo refunds the last action. Restart uses the same random sequence so that strategies can be compared. Motion effects respect the browser's reduced-motion preference.
+Undo refunds the full price of the last action. Restart uses the same random sequence so that strategies can be compared. Motion effects respect the browser's reduced-motion preference.
 
 ## About the model
 
