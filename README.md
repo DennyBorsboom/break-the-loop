@@ -20,6 +20,8 @@ An optional **forecast costs one additional coin**. It compares the exact chance
 
 Undo refunds the full price of the last action. Restart uses the same random sequence so that strategies can be compared. Motion effects respect the browser's reduced-motion preference.
 
+When the coins run out without a win, a **Play again?** prompt opens automatically. Choose Play again to restart, or Review this round to inspect the network and undo a move. The final treatment's response finishes before this prompt appears; winning with the last coins still earns the prize.
+
 ## About the model
 
 The nine nodes represent the nine depression symptom criteria. Their positive, symmetric interaction weights and activation parameters are illustrative. This is not fitted patient data or a reproduction of the original 14-node Cramer et al. network. The all-green goal is a game rule rather than a clinical definition of recovery.

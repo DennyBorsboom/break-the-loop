@@ -23,6 +23,7 @@
   let turnAnimation = null;
   let celebrationPlayed = false;
   let celebrationTimer = null;
+  let exhaustionPromptShown = false;
 
   function element(tag, className, text) {
     const el = document.createElement(tag);
@@ -273,15 +274,30 @@
     result.replaceChildren();
     result.hidden = phase !== 'won' && phase !== 'exhausted';
     result.classList.toggle('exhausted', phase === 'exhausted');
-    if (result.hidden) return;
+    if (result.hidden) { renderExhaustionPrompt(); return; }
     if (phase === 'won') {
       const tips = history.filter(entry => entry.kind === 'forecast').length;
       result.append(element('h3', '', 'You broke the loop.'), element('p', '', `All nine nodes are green. You spent ${coinsSpent()} of ${budget} coins, including ${tips} ${tips === 1 ? 'forecast' : 'forecasts'}. Your Loop Breaker award is yours!`));
-    } else result.append(element('h3', '', 'A new strategy?'), element('p', '', 'Your coins are spent and the recovery goal is not yet met. Undo a move or restart to try a different path.'));
-    const again = element('button', 'text-button', 'Replay this network ↗');
+    } else result.append(element('h3', '', 'Out of coins.'), element('p', '', 'Your coins are spent. Play again to try a different path, or undo your last move.'));
+    const again = element('button', phase === 'exhausted' ? 'primary-button' : 'text-button', 'Play again');
     again.type = 'button';
     again.addEventListener('click', restart);
     result.append(again);
+    renderExhaustionPrompt();
+  }
+
+  function renderExhaustionPrompt() {
+    const dialog = $('round-over-dialog');
+    if (phase !== 'exhausted') {
+      exhaustionPromptShown = false;
+      if (dialog.open) dialog.close();
+      return;
+    }
+    if (exhaustionPromptShown) return;
+    exhaustionPromptShown = true;
+    $('round-over-description').textContent = `You’ve spent all ${budget} treatment coins. Try a different path to get the whole network green.`;
+    if ($('learn-dialog').open) $('learn-dialog').close();
+    dialog.showModal();
   }
 
   function renderCelebration() {
@@ -433,6 +449,12 @@
   $('buy-forecast').addEventListener('click', buyForecast);
   $('restart').addEventListener('click', restart);
   $('undo').addEventListener('click', undo);
+  $('play-again').addEventListener('click', () => {
+    restart();
+    document.querySelector('.network-card').scrollIntoView({ block: 'start', behavior: reducedMotion ? 'instant' : 'smooth' });
+    $('network').querySelector('[data-node="0"]').focus({ preventScroll: true });
+  });
+  $('review-round').addEventListener('click', () => $('round-over-dialog').close());
   const dialog = $('learn-dialog');
   document.querySelectorAll('.learn-trigger').forEach(button => button.addEventListener('click', () => dialog.showModal()));
   $('close-learn').addEventListener('click', () => dialog.close());

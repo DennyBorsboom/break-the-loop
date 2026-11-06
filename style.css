@@ -117,6 +117,12 @@
 .learning-grid p, .rules-section p, .model-details p { font-size: 15px; line-height: 1.8; color: #4c604a; }
 .references p { font-size: 13px; color: #53664c; }
 .dialog-content summary { font-size: 15px; }
+.round-over-dialog { width: min(440px, calc(100% - 32px)); }
+.round-over-dialog .eyebrow { color: #77683f; }
+.round-over-dialog .dialog-content > h2 { font-size: 36px; margin: 15px 0 12px; }
+.round-over-dialog .dialog-lead { margin: 0 0 24px; }
+.round-over-dialog .primary-button { max-width: none; }
+.round-over-dialog .text-button { display: flex; margin: 14px auto 0; color: #4b624c; font-size: 14px; }
 
 @media (max-width: 1050px) and (min-width: 761px) {
   .play-layout { grid-template-columns: minmax(0, 1fr) 320px; }
