@@ -4,7 +4,7 @@
   const $ = id => document.getElementById(id);
   const svgNS = 'http://www.w3.org/2000/svg';
   const budget = 6;
-  const treatmentCosts = Object.freeze({ node: 1, edge: 2, field: 2 });
+  const treatmentCosts = Object.freeze({ node: 1, edge: 3, field: 2 });
   const forecastCost = 1;
   const undoCost = 1;
   const seed = 271828;
