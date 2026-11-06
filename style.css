@@ -123,6 +123,7 @@
 .round-over-dialog .dialog-lead { margin: 0 0 24px; }
 .round-over-dialog .primary-button { max-width: none; }
 .round-over-dialog .text-button { display: flex; margin: 14px auto 0; color: #4b624c; font-size: 14px; }
+.history-row.undone-action .history-description strong { color: #64735f; font-weight: 450; text-decoration: line-through; text-decoration-color: #b3bfaa; }
 
 @media (max-width: 1050px) and (min-width: 761px) {
   .play-layout { grid-template-columns: minmax(0, 1fr) 320px; }

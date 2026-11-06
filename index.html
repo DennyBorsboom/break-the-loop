@@ -132,6 +132,7 @@
 .round-over-dialog .dialog-lead { margin: 0 0 24px; }
 .round-over-dialog .primary-button { max-width: none; }
 .round-over-dialog .text-button { display: flex; margin: 14px auto 0; color: #4b624c; font-size: 14px; }
+.history-row.undone-action .history-description strong { color: #64735f; font-weight: 450; text-decoration: line-through; text-decoration-color: #b3bfaa; }
 
 @media (max-width: 1050px) and (min-width: 761px) {
   .play-layout { grid-template-columns: minmax(0, 1fr) 320px; }
@@ -284,7 +285,7 @@
           <div class="forecast-area"><button id="buy-forecast" class="forecast-button" type="button" disabled><span><span aria-hidden="true">⌁</span> Buy a forecast</span><span>1 coin</span></button><p id="forecast-note" class="forecast-note">Optional: spend a coin to preview your selected move.</p><div id="forecast-result" class="forecast-result" hidden aria-live="polite"></div></div>
           <button id="apply" class="primary-button" type="button" disabled><span id="apply-label">Select a target</span><span class="button-cost"><span aria-hidden="true">◈</span> <span id="treatment-cost" class="cost-value">1</span></span></button>
           <p class="timing-note">The network responds for up to two sweeps. All nine green ends the round.</p>
-          <div class="round-actions"><button id="undo" class="text-button" type="button" disabled>↶ Undo move</button><button id="restart" class="text-button" type="button">↻ Restart round</button></div>
+          <div class="round-actions"><button id="undo" class="text-button" type="button" disabled>↶ Undo · 1 coin</button><button id="restart" class="text-button" type="button">↻ Restart round</button></div>
           <div id="result" class="result" role="status" hidden></div>
         </aside>
       </div>
@@ -307,7 +308,7 @@
 
   <dialog id="learn-dialog" aria-labelledby="learn-title"><div class="dialog-content"><div class="dialog-top"><span class="eyebrow">A SHORT FIELD GUIDE</span><button class="close-button" id="close-learn" type="button" aria-label="Close the learning guide">×</button></div><h2 id="learn-title">When symptoms form a system.</h2><p class="dialog-lead">A symptom can be both a consequence and a cause. Sleep problems can contribute to fatigue; fatigue can feed other difficulties. Strong feedback can keep a network active after its original trigger has gone.</p>
     <div class="learning-grid"><section><span class="lesson-number">01</span><h3>Change a state</h3><p>A node intervention sets one symptom to <strong>inactive once</strong>. Its field and connections stay the same. If its neighbours keep supplying activation, it can switch back on—even during the next sweep.</p></section><section><span class="lesson-number">02</span><h3>Change a connection</h3><p>An edge intervention sets one interaction weight to zero for the rest of the round. It removes that direct influence in both directions. Other paths through the network remain.</p></section><section><span class="lesson-number">03</span><h3>Change a disposition</h3><p>A field intervention lowers one node’s activation parameter by 1.5 for the rest of the round. It makes activation less likely, without forcing the symptom off. You can apply it more than once to a node.</p></section></div>
-    <section class="rules-section"><h3>What counts as a win?</h3><p>Use at most six coins to get <strong>all nine nodes green at the same time</strong>. The game checks immediately after your intervention and after each response sweep. When all nine are inactive, the round ends and you earn the <strong>Loop Breaker award</strong>. One or two active symptoms still means there is work to do.</p><p><strong>Node switches cost 1 coin. Edge removals and field shifts cost 2 coins each.</strong> The six-coin budget counts what you spend, and undo refunds the full price of the last action. You need enough coins to pay for a treatment before applying it.</p><p>A sweep is nine random node-update opportunities; a node may be chosen more than once. Each treatment is followed by up to two sweeps, stopping as soon as the whole network is green. The green-node counter shows your current progress.</p><p><strong>A forecast is an optional tip that costs one coin.</strong> Select an intervention and its target, then buy a preview. It compares the exact chance of all nine nodes being green after six sweeps with and without that intervention. This is a fixed-horizon projection of the model, not the probability of winning at any earlier checkpoint. Buying a forecast does not apply treatment or advance the network. The forecast stays available for that selection until the next treatment; a changed network needs a new forecast. Forecasts count toward your six-coin budget and final score.</p><p>Symptoms are binary and their updates are stochastic: a good forecast is not a promise. Restart reuses the same random sequence, so you can compare strategies; undo also restores the random sequence and refunds the undone action. Forecast probabilities are calculated exactly, not estimated from repeated simulations.</p><p>The all-green goal is a game rule, not a clinical diagnostic or recovery criterion. The nine nodes group the nine depression symptom criteria; the weights and fields are illustrative, not fitted patient data or the original Cramer network.</p></section>
+    <section class="rules-section"><h3>What counts as a win?</h3><p>Use at most six coins to get <strong>all nine nodes green at the same time</strong>. The game checks immediately after your intervention and after each response sweep. When all nine are inactive, the round ends and you earn the <strong>Loop Breaker award</strong>. One or two active symptoms still means there is work to do.</p><p><strong>Node switches cost 1 coin. Edge removals and field shifts cost 2 coins each.</strong> The six-coin budget counts what you spend. Undo costs 1 additional coin; the original action price and earlier undo fees stay spent. It restores the last active action’s network state or forecast, and is unavailable when no coins remain. You need enough coins to pay for a treatment before applying it.</p><p>A sweep is nine random node-update opportunities; a node may be chosen more than once. Each treatment is followed by up to two sweeps, stopping as soon as the whole network is green. The green-node counter shows your current progress.</p><p><strong>A forecast is an optional tip that costs one coin.</strong> Select an intervention and its target, then buy a preview. It compares the exact chance of all nine nodes being green after six sweeps with and without that intervention. This is a fixed-horizon projection of the model, not the probability of winning at any earlier checkpoint. Buying a forecast does not apply treatment or advance the network. The forecast stays available for that selection until the next treatment; a changed network needs a new forecast. Forecasts count toward your six-coin budget and final score.</p><p>Symptoms are binary and their updates are stochastic: a good forecast is not a promise. Restart reuses the same random sequence, so you can compare strategies; undo restores the random sequence, costs one coin, and keeps earlier spending charged. Forecast probabilities are calculated exactly, not estimated from repeated simulations.</p><p>The all-green goal is a game rule, not a clinical diagnostic or recovery criterion. The nine nodes group the nine depression symptom criteria; the weights and fields are illustrative, not fitted patient data or the original Cramer network.</p></section>
     <details><summary>The model, in a little more detail</summary><div class="model-details"><p>We use a 0/1-coded Ising model. For the selected node <em>i</em>, the probability of being active on its next update is:</p><div class="formula">pᵢ = 1 / [1 + exp(−(τᵢ + Σⱼ wᵢⱼ xⱼ))]</div><p>Lowering τᵢ reduces activation, matching the NIRA activation-parameter convention. Each update chooses one node uniformly at random. This single-site Gibbs rule has stationary probability:</p><div class="formula">P(x) ∝ exp(Σᵢ τᵢ xᵢ + Σᵢ&lt;ⱼ wᵢⱼ xᵢ xⱼ)</div><p>With nine binary nodes there are 512 states. We propagate probability across all states for 54 updates to calculate the six-sweep outlook exactly. A node intervention moves the current state only; an edge or field intervention changes the transition probabilities.</p><p>This is inspired by Cramer et al.’s dynamic framework, using asynchronous updates consistent with the joint Ising distribution rather than reproducing their synchronous update rule. The supplied Epskamp chapter uses −1/+1 coding in Equation 8; our parameters are defined directly in 0/1 coding and are not copied across conventions.</p></div></details>
     <section class="references"><h3>Ideas behind the game</h3><p>Borsboom (2017). <em>A network theory of mental disorders.</em> World Psychiatry, 16, 5–13. DOI: 10.1002/wps.20375.</p><p>Cramer et al. (2016). <em>Major Depression as a Complex Dynamic System.</em> PLOS ONE, 11, e0167490. DOI: 10.1371/journal.pone.0167490.</p><p>Epskamp, Maris, Waldorp &amp; Borsboom. <em>Network Psychometrics.</em> Supplied chapter, arXiv:1609.02818v2.</p><p>Lunansky et al. <em>Intervening on psychopathology networks: Evaluating intervention targets through simulations.</em> Methods. Supplied NIRA paper.</p></section>
     <button id="back-to-game" class="primary-button" type="button">Back to the network <span aria-hidden="true">↗</span></button>
@@ -468,6 +469,7 @@
   const budget = 6;
   const treatmentCosts = Object.freeze({ node: 1, edge: 2, field: 2 });
   const forecastCost = 1;
+  const undoCost = 1;
   const seed = 271828;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, reducedMotion ? 450 : milliseconds));
@@ -478,7 +480,7 @@
     field: 'Click any symptom. Lowering its activation parameter makes it less likely to turn on for the rest of the round.'
   };
 
-  let model, state, random, history, purchased, treatmentVersion;
+  let model, state, random, history, ledger, purchased, treatmentVersion;
   let type = 'node';
   let target = null;
   let phase = 'playing';
@@ -525,8 +527,8 @@
     return true;
   }
   function isWon() { return state === 0; }
-  function coinsSpent() { return history.reduce((sum, entry) => sum + entry.cost, 0); }
-  function coinsRemaining() { return budget - coinsSpent() - (phase === 'busy' ? treatmentCosts[type] : 0); }
+  function coinsSpent() { return ledger.reduce((sum, entry) => sum + entry.cost, 0); }
+  function coinsRemaining() { return budget - coinsSpent(); }
   function coinLabel(amount) { return `${amount} ${amount === 1 ? 'coin' : 'coins'}`; }
 
   function drawNetwork(previousState = state, interventionTarget = null) {
@@ -631,7 +633,8 @@
     $('network-badge').textContent = phase === 'busy' ? (turnAnimation?.stage === 'applied' ? 'MOVE APPLIED' : `RESPONSE · ${turnAnimation?.sweep || 1} / 2`) : phase === 'won' ? 'LOOP BROKEN' : phase === 'exhausted' ? 'ROUND COMPLETE' : 'YOUR MOVE';
     document.body.classList.toggle('busy', phase === 'busy');
     $('restart').disabled = phase === 'busy';
-    $('undo').disabled = !history.length || phase === 'busy';
+    $('undo').disabled = !history.length || phase === 'busy' || remaining < undoCost;
+    $('undo').title = !history.length ? 'No actions to undo' : remaining < undoCost ? 'No coins left for undo' : 'Undo costs 1 coin. Earlier spending stays spent.';
   }
 
   function renderForecast() {
@@ -688,7 +691,7 @@
     if (phase === 'won') {
       $('target-kicker').textContent = 'ROUND COMPLETE';
       $('target-name').textContent = 'All nine nodes are green';
-      description = 'You earned the Loop Breaker award. The network has stopped. Replay to try a cheaper path, or undo to revisit your final move.';
+      description = coinsRemaining() >= undoCost ? 'You earned the Loop Breaker award. Replay to try a cheaper path, or spend 1 coin to undo your final move.' : 'You earned the Loop Breaker award. The round is complete. Play again to try a different path.';
       detail = `${coinLabel(coinsSpent())} spent · ${budget - coinsSpent()} saved`;
     }
     $('target-description').textContent = description;
@@ -707,21 +710,27 @@
   function renderHistory() {
     const list = $('history');
     list.replaceChildren();
-    if (!history.length) {
+    if (!ledger.length) {
       const empty = element('div', 'history-empty');
       empty.append(element('span', 'history-empty-line'), document.createTextNode('Your first intervention starts the story.'));
       list.append(empty);
       return;
     }
-    history.forEach((entry, index) => {
-      const row = element('div', 'history-row');
+    ledger.forEach((entry, index) => {
+      const row = element('div', `history-row${entry.undone ? ' undone-action' : ''}`);
       row.append(element('span', 'history-number', String(index + 1)));
       const description = element('div', 'history-description');
-      const actionLabel = entry.kind === 'forecast' ? 'Forecast purchased' : entry.type === 'node' ? 'Switched off' : entry.type === 'edge' ? 'Connection removed' : 'Field shifted';
-      description.append(element('strong', '', `${actionLabel} · ${targetName(entry.type, entry.target)}`));
-      if (entry.kind === 'forecast') {
+      const actionLabel = entry.kind === 'undo' ? 'Undo' : entry.kind === 'forecast' ? 'Forecast purchased' : entry.type === 'node' ? 'Switched off' : entry.type === 'edge' ? 'Connection removed' : 'Field shifted';
+      description.append(element('strong', '', `${actionLabel} · ${targetName(entry.type, entry.target)}${entry.undone ? ' · undone' : ''}`));
+      if (entry.kind === 'undo') {
+        description.append(element('small', '', `${coinLabel(entry.cost)} · Reversed the last action. Earlier spending stays spent.`));
+        row.append(description, element('span', 'history-activity', 'Undo fee'));
+      } else if (entry.kind === 'forecast') {
         description.append(element('small', '', `${coinLabel(entry.cost)} · A paid tip. The network did not advance.`));
         row.append(description, element('span', 'history-forecast', `${percent(entry.forecast.projected)} predicted`));
+      } else if (entry.finalState === undefined) {
+        description.append(element('small', '', `${coinLabel(entry.cost)} · Intervention applied; waiting for the network response.`));
+        row.append(description, element('span', 'history-activity', 'Responding…'));
       } else {
         const reactivated = entry.type === 'node' && M.isOn(entry.finalState, entry.target);
         description.append(element('small', '', `${coinLabel(entry.cost)} · ${entry.sweepCounts.length ? `Sweep checks: ${entry.sweepCounts.join(' → ')} active` : 'All green immediately after the intervention'}${reactivated ? ' · Target reactivated' : ''}`));
@@ -738,9 +747,10 @@
     result.classList.toggle('exhausted', phase === 'exhausted');
     if (result.hidden) { renderExhaustionPrompt(); return; }
     if (phase === 'won') {
-      const tips = history.filter(entry => entry.kind === 'forecast').length;
-      result.append(element('h3', '', 'You broke the loop.'), element('p', '', `All nine nodes are green. You spent ${coinsSpent()} of ${budget} coins, including ${tips} ${tips === 1 ? 'forecast' : 'forecasts'}. Your Loop Breaker award is yours!`));
-    } else result.append(element('h3', '', 'Out of coins.'), element('p', '', 'Your coins are spent. Play again to try a different path, or undo your last move.'));
+      const tips = ledger.filter(entry => entry.kind === 'forecast').length;
+      const undos = ledger.filter(entry => entry.kind === 'undo').length;
+      result.append(element('h3', '', 'You broke the loop.'), element('p', '', `All nine nodes are green. You spent ${coinsSpent()} of ${budget} coins, including ${tips} ${tips === 1 ? 'forecast' : 'forecasts'} and ${undos} ${undos === 1 ? 'undo' : 'undos'}. Your Loop Breaker award is yours!`));
+    } else result.append(element('h3', '', 'Out of coins.'), element('p', '', 'Your coins are spent. Play again to try a different path.'));
     const again = element('button', phase === 'exhausted' ? 'primary-button' : 'text-button', 'Play again');
     again.type = 'button';
     again.addEventListener('click', restart);
@@ -817,6 +827,7 @@
   async function applyTreatment() {
     if (phase !== 'playing' || !validTarget() || coinsRemaining() < treatmentCosts[type]) return;
     const entry = { kind: 'treatment', type, target, cost: treatmentCosts[type], beforeState: state, sweepCounts: [] };
+    ledger.push(entry);
     const label = targetName(type, target);
     phase = 'busy';
     const previousState = state;
@@ -862,7 +873,9 @@
     const projected = M.forecast(alteredModel, alteredState).healthyProbability;
     const forecast = { baseline, projected };
     purchased.set(cacheKey(), forecast);
-    history.push({ kind: 'forecast', type, target, cost: forecastCost, forecast });
+    const entry = { kind: 'forecast', type, target, cost: forecastCost, forecast };
+    history.push(entry);
+    ledger.push(entry);
     if (coinsSpent() >= budget) phase = 'exhausted';
     setMessage(`Forecast purchased for one coin. ${targetName(type, target)}: ${percent(projected)} chance of all nine nodes being green after six sweeps if you apply this intervention. The network has not advanced.`);
     renderStats(); renderSelection(); renderHistory(); renderResult();
@@ -870,7 +883,7 @@
 
   function resetModel() {
     model = M.createModel(); state = M.SIZE - 1; random = M.randomGenerator(seed);
-    history = []; purchased = new Map(); treatmentVersion = 0; phase = 'playing'; turnAnimation = null;
+    history = []; ledger = []; purchased = new Map(); treatmentVersion = 0; phase = 'playing'; turnAnimation = null;
   }
 
   function restart() {
@@ -881,10 +894,14 @@
   }
 
   function undo() {
-    if (phase === 'busy' || !history.length) return;
-    const refund = history[history.length - 1].cost;
+    if (phase === 'busy' || !history.length || coinsRemaining() < undoCost) return;
+    const removed = history[history.length - 1];
+    removed.undone = true;
+    const spending = ledger;
+    spending.push({ kind: 'undo', type: removed.type, target: removed.target, cost: undoCost });
     const retained = history.slice(0, -1);
     resetModel();
+    ledger = spending;
     for (const entry of retained) {
       if (entry.kind === 'forecast') {
         purchased.set(`${treatmentVersion}:${entry.type}:${entry.target}`, entry.forecast);
@@ -898,7 +915,8 @@
       history.push(entry);
     }
     target = null;
-    setMessage(`Last action undone and ${coinLabel(refund)} refunded. The network and random sequence are restored.`);
+    phase = coinsSpent() >= budget ? 'exhausted' : 'playing';
+    setMessage('The last action was reversed and the network restored. Earlier spending stays spent.', 'Undo applied · 1 coin spent');
     render();
   }
 

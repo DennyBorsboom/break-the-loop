@@ -18,9 +18,9 @@ The six-coin budget counts coins spent, rather than the number of actions. A tre
 
 An optional **forecast costs one additional coin**. It compares the exact chance of all nine nodes being green after six sweeps, with and without the selected intervention. Buying it does not apply treatment or advance time. It is a fixed-horizon prediction, rather than the probability of winning at any earlier checkpoint.
 
-Undo refunds the full price of the last action. Restart uses the same random sequence so that strategies can be compared. Motion effects respect the browser's reduced-motion preference.
+**Undo costs 1 additional coin.** It reverses the last active treatment or forecast; the original price and earlier undo fees stay spent. Undo is unavailable at zero coins. Undone actions and undo fees remain visible in the spending history and count toward the final score. Restart resets the budget and uses the same random sequence so that strategies can be compared. Motion effects respect the browser's reduced-motion preference.
 
-When the coins run out without a win, a **Play again?** prompt opens automatically. Choose Play again to restart, or Review this round to inspect the network and undo a move. The final treatment's response finishes before this prompt appears; winning with the last coins still earns the prize.
+When the coins run out without a win, a **Play again?** prompt opens automatically. Choose Play again to restart, or Review this round to inspect the network and spending history. The final treatment's response finishes before this prompt appears; winning with the last coins still earns the prize.
 
 ## About the model
 

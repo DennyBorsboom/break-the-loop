@@ -6,6 +6,7 @@
   const budget = 6;
   const treatmentCosts = Object.freeze({ node: 1, edge: 2, field: 2 });
   const forecastCost = 1;
+  const undoCost = 1;
   const seed = 271828;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, reducedMotion ? 450 : milliseconds));
@@ -16,7 +17,7 @@
     field: 'Click any symptom. Lowering its activation parameter makes it less likely to turn on for the rest of the round.'
   };
 
-  let model, state, random, history, purchased, treatmentVersion;
+  let model, state, random, history, ledger, purchased, treatmentVersion;
   let type = 'node';
   let target = null;
   let phase = 'playing';
@@ -63,8 +64,8 @@
     return true;
   }
   function isWon() { return state === 0; }
-  function coinsSpent() { return history.reduce((sum, entry) => sum + entry.cost, 0); }
-  function coinsRemaining() { return budget - coinsSpent() - (phase === 'busy' ? treatmentCosts[type] : 0); }
+  function coinsSpent() { return ledger.reduce((sum, entry) => sum + entry.cost, 0); }
+  function coinsRemaining() { return budget - coinsSpent(); }
   function coinLabel(amount) { return `${amount} ${amount === 1 ? 'coin' : 'coins'}`; }
 
   function drawNetwork(previousState = state, interventionTarget = null) {
@@ -169,7 +170,8 @@
     $('network-badge').textContent = phase === 'busy' ? (turnAnimation?.stage === 'applied' ? 'MOVE APPLIED' : `RESPONSE · ${turnAnimation?.sweep || 1} / 2`) : phase === 'won' ? 'LOOP BROKEN' : phase === 'exhausted' ? 'ROUND COMPLETE' : 'YOUR MOVE';
     document.body.classList.toggle('busy', phase === 'busy');
     $('restart').disabled = phase === 'busy';
-    $('undo').disabled = !history.length || phase === 'busy';
+    $('undo').disabled = !history.length || phase === 'busy' || remaining < undoCost;
+    $('undo').title = !history.length ? 'No actions to undo' : remaining < undoCost ? 'No coins left for undo' : 'Undo costs 1 coin. Earlier spending stays spent.';
   }
 
   function renderForecast() {
@@ -226,7 +228,7 @@
     if (phase === 'won') {
       $('target-kicker').textContent = 'ROUND COMPLETE';
       $('target-name').textContent = 'All nine nodes are green';
-      description = 'You earned the Loop Breaker award. The network has stopped. Replay to try a cheaper path, or undo to revisit your final move.';
+      description = coinsRemaining() >= undoCost ? 'You earned the Loop Breaker award. Replay to try a cheaper path, or spend 1 coin to undo your final move.' : 'You earned the Loop Breaker award. The round is complete. Play again to try a different path.';
       detail = `${coinLabel(coinsSpent())} spent · ${budget - coinsSpent()} saved`;
     }
     $('target-description').textContent = description;
@@ -245,21 +247,27 @@
   function renderHistory() {
     const list = $('history');
     list.replaceChildren();
-    if (!history.length) {
+    if (!ledger.length) {
       const empty = element('div', 'history-empty');
       empty.append(element('span', 'history-empty-line'), document.createTextNode('Your first intervention starts the story.'));
       list.append(empty);
       return;
     }
-    history.forEach((entry, index) => {
-      const row = element('div', 'history-row');
+    ledger.forEach((entry, index) => {
+      const row = element('div', `history-row${entry.undone ? ' undone-action' : ''}`);
       row.append(element('span', 'history-number', String(index + 1)));
       const description = element('div', 'history-description');
-      const actionLabel = entry.kind === 'forecast' ? 'Forecast purchased' : entry.type === 'node' ? 'Switched off' : entry.type === 'edge' ? 'Connection removed' : 'Field shifted';
-      description.append(element('strong', '', `${actionLabel} · ${targetName(entry.type, entry.target)}`));
-      if (entry.kind === 'forecast') {
+      const actionLabel = entry.kind === 'undo' ? 'Undo' : entry.kind === 'forecast' ? 'Forecast purchased' : entry.type === 'node' ? 'Switched off' : entry.type === 'edge' ? 'Connection removed' : 'Field shifted';
+      description.append(element('strong', '', `${actionLabel} · ${targetName(entry.type, entry.target)}${entry.undone ? ' · undone' : ''}`));
+      if (entry.kind === 'undo') {
+        description.append(element('small', '', `${coinLabel(entry.cost)} · Reversed the last action. Earlier spending stays spent.`));
+        row.append(description, element('span', 'history-activity', 'Undo fee'));
+      } else if (entry.kind === 'forecast') {
         description.append(element('small', '', `${coinLabel(entry.cost)} · A paid tip. The network did not advance.`));
         row.append(description, element('span', 'history-forecast', `${percent(entry.forecast.projected)} predicted`));
+      } else if (entry.finalState === undefined) {
+        description.append(element('small', '', `${coinLabel(entry.cost)} · Intervention applied; waiting for the network response.`));
+        row.append(description, element('span', 'history-activity', 'Responding…'));
       } else {
         const reactivated = entry.type === 'node' && M.isOn(entry.finalState, entry.target);
         description.append(element('small', '', `${coinLabel(entry.cost)} · ${entry.sweepCounts.length ? `Sweep checks: ${entry.sweepCounts.join(' → ')} active` : 'All green immediately after the intervention'}${reactivated ? ' · Target reactivated' : ''}`));
@@ -276,9 +284,10 @@
     result.classList.toggle('exhausted', phase === 'exhausted');
     if (result.hidden) { renderExhaustionPrompt(); return; }
     if (phase === 'won') {
-      const tips = history.filter(entry => entry.kind === 'forecast').length;
-      result.append(element('h3', '', 'You broke the loop.'), element('p', '', `All nine nodes are green. You spent ${coinsSpent()} of ${budget} coins, including ${tips} ${tips === 1 ? 'forecast' : 'forecasts'}. Your Loop Breaker award is yours!`));
-    } else result.append(element('h3', '', 'Out of coins.'), element('p', '', 'Your coins are spent. Play again to try a different path, or undo your last move.'));
+      const tips = ledger.filter(entry => entry.kind === 'forecast').length;
+      const undos = ledger.filter(entry => entry.kind === 'undo').length;
+      result.append(element('h3', '', 'You broke the loop.'), element('p', '', `All nine nodes are green. You spent ${coinsSpent()} of ${budget} coins, including ${tips} ${tips === 1 ? 'forecast' : 'forecasts'} and ${undos} ${undos === 1 ? 'undo' : 'undos'}. Your Loop Breaker award is yours!`));
+    } else result.append(element('h3', '', 'Out of coins.'), element('p', '', 'Your coins are spent. Play again to try a different path.'));
     const again = element('button', phase === 'exhausted' ? 'primary-button' : 'text-button', 'Play again');
     again.type = 'button';
     again.addEventListener('click', restart);
@@ -355,6 +364,7 @@
   async function applyTreatment() {
     if (phase !== 'playing' || !validTarget() || coinsRemaining() < treatmentCosts[type]) return;
     const entry = { kind: 'treatment', type, target, cost: treatmentCosts[type], beforeState: state, sweepCounts: [] };
+    ledger.push(entry);
     const label = targetName(type, target);
     phase = 'busy';
     const previousState = state;
@@ -400,7 +410,9 @@
     const projected = M.forecast(alteredModel, alteredState).healthyProbability;
     const forecast = { baseline, projected };
     purchased.set(cacheKey(), forecast);
-    history.push({ kind: 'forecast', type, target, cost: forecastCost, forecast });
+    const entry = { kind: 'forecast', type, target, cost: forecastCost, forecast };
+    history.push(entry);
+    ledger.push(entry);
     if (coinsSpent() >= budget) phase = 'exhausted';
     setMessage(`Forecast purchased for one coin. ${targetName(type, target)}: ${percent(projected)} chance of all nine nodes being green after six sweeps if you apply this intervention. The network has not advanced.`);
     renderStats(); renderSelection(); renderHistory(); renderResult();
@@ -408,7 +420,7 @@
 
   function resetModel() {
     model = M.createModel(); state = M.SIZE - 1; random = M.randomGenerator(seed);
-    history = []; purchased = new Map(); treatmentVersion = 0; phase = 'playing'; turnAnimation = null;
+    history = []; ledger = []; purchased = new Map(); treatmentVersion = 0; phase = 'playing'; turnAnimation = null;
   }
 
   function restart() {
@@ -419,10 +431,14 @@
   }
 
   function undo() {
-    if (phase === 'busy' || !history.length) return;
-    const refund = history[history.length - 1].cost;
+    if (phase === 'busy' || !history.length || coinsRemaining() < undoCost) return;
+    const removed = history[history.length - 1];
+    removed.undone = true;
+    const spending = ledger;
+    spending.push({ kind: 'undo', type: removed.type, target: removed.target, cost: undoCost });
     const retained = history.slice(0, -1);
     resetModel();
+    ledger = spending;
     for (const entry of retained) {
       if (entry.kind === 'forecast') {
         purchased.set(`${treatmentVersion}:${entry.type}:${entry.target}`, entry.forecast);
@@ -436,7 +452,8 @@
       history.push(entry);
     }
     target = null;
-    setMessage(`Last action undone and ${coinLabel(refund)} refunded. The network and random sequence are restored.`);
+    phase = coinsSpent() >= budget ? 'exhausted' : 'playing';
+    setMessage('The last action was reversed and the network restored. Earlier spending stays spent.', 'Undo applied · 1 coin spent');
     render();
   }
 
