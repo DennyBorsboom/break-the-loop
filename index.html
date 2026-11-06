@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f5f4ee">
-  <meta name="description" content="A small strategy game about symptom feedback, depression networks, and three ways to intervene.">
+  <meta name="description" content="A small strategy game about symptom feedback, depression networks, and ways to intervene.">
   <title>Break the Loop · A network theory game</title>
   <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTEiIGZpbGw9IiMxNzNmMzYiLz48cGF0aCBkPSJtMTEgMTIgMTctMSAxIDE3LTE3IDFaIiBmaWxsPSJub25lIiBzdHJva2U9IiNkNmU1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjxnIGZpbGw9IiNkNmU1YjgiPjxjaXJjbGUgY3g9IjExIiBjeT0iMTIiIHI9IjMiLz48Y2lyY2xlIGN4PSIyOCIgY3k9IjExIiByPSIzIi8+PGNpcmNsZSBjeD0iMjkiIGN5PSIyOCIgcj0iMyIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMjkiIHI9IjMiLz48L2c+PC9zdmc+Cg==" type="image/svg+xml">
   <style>
@@ -242,6 +242,93 @@
   .award-score { font-size: 12px; }
 }
 
+/* Two ways to play the same intervention challenge. */
+.model-picker { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px 24px; padding: 18px 21px; margin: 0 0 20px; border: 1px solid #d5dfd1; border-radius: 11px; background: #eef1e7; }
+.model-picker .section-kicker { color: #4a6347; font-size: 11px; }
+.model-picker p { font-size: 14px; color: #405b48; line-height: 1.6; margin: 6px 0 0; max-width: 480px; }
+.model-picker > small { font-size: 12px; color: #60725b; grid-column: 1 / -1; }
+.model-options { display: grid; grid-template-columns: 1fr 1.5fr; gap: 7px; }
+.model-options button { border: 1px solid #c9d5bf; border-radius: 8px; padding: 13px 16px; text-align: left; color: #435e43; background: #f9faf4; cursor: pointer; font: inherit; }
+.model-options button strong, .model-options button span { display: block; }
+.model-options button strong { font-size: 15px; font-weight: 600; }
+.model-options button span { margin-top: 5px; font-size: 12px; }
+.model-options button[aria-pressed="true"] { background: #315945; border-color: #315945; color: #fffefa; }
+.model-options button:hover:not(:disabled):not([aria-pressed="true"]) { border-color: #5e7f59; background: #e7eddc; }
+.model-options button:disabled { cursor: wait; }
+.time-panel { margin: 12px 23px 0; padding: 16px 17px 13px; background: #f0f3ed; border: 1px solid #d9e3d4; border-radius: 9px; }
+.time-panel[hidden], .graph-key[hidden] { display: none; }
+.time-heading { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.time-heading > div:first-child { display: flex; flex-wrap: wrap; align-items: center; gap: 7px 12px; }
+.time-heading .section-kicker { width: 100%; font-size: 10px; color: #53704d; }
+#model-time { font-size: 22px; font-weight: 550; font-variant-numeric: tabular-nums; color: #2e5140; }
+#time-status { font-size: 12px; color: #4d6552; }
+.time-actions { display: flex; gap: 7px; }
+.time-actions .text-button { border: 1px solid #b8cbb0; border-radius: 6px; background: #fffefa; padding: 9px 11px; font-size: 13px; color: #315b40; white-space: nowrap; }
+.time-actions .text-button:disabled { opacity: .45; cursor: default; }
+.time-track { height: 4px; overflow: hidden; background: #dbe4d4; border-radius: 4px; margin: 13px 0 16px; }
+#time-fill { display: block; width: 0; height: 100%; background: #6d9061; transition: width .1s linear; }
+.trace-heading { display: flex; justify-content: space-between; font-size: 12px; color: #50644c; }
+.trace-heading strong { color: #365743; font-weight: 600; font-variant-numeric: tabular-nums; }
+#level-trace { display: block; width: 100%; height: 46px; margin-top: 3px; overflow: visible; }
+#level-trace path { fill: none; stroke: #64859a; stroke-width: 2; vector-effect: non-scaling-stroke; }
+#level-trace .trace-green { stroke: #b4c7a9; stroke-dasharray: 4 5; stroke-width: 1; }
+.time-panel p { color: #546a50; font-size: 12px; line-height: 1.65; margin: 8px 0 0; }
+.continuous-model .edge-visible, .continuous-model .edge-hit, .continuous-model .edge-removal { fill: none; }
+.continuous-model .node-symbol { font-size: 17px; font-weight: 650; fill: #3e4033; }
+.continuous-model .node-body { transition: fill .2s linear; }
+.continuous-model .node-mini { font-size: 10px; fill: #52674d; letter-spacing: .5px; }
+.continuous-model .node-halo { fill: #f0ede1; }
+.continuous-model .inactive .node-halo { fill: #e0ebd8; }
+.continuous-model .reactivated .action-wave { animation: none; }
+.continuous-key { gap: 14px; }
+.intensity-scale { width: 100px; height: 8px; border-radius: 10px; background: linear-gradient(90deg, #92b283, #dac89b, #d47966); }
+.forecast-levels { color: #315844 !important; font-weight: 600; }
+@media (max-width: 1050px) {
+  .model-picker { grid-template-columns: 1fr; gap: 12px; }
+  .model-options { max-width: 490px; }
+  .model-picker > small { grid-column: 1; }
+  .time-panel { margin-left: 16px; margin-right: 16px; }
+}
+@media (max-width: 760px) {
+  .model-picker { padding: 17px 14px; }
+  .model-options { width: 100%; }
+  .model-options button { padding: 12px 10px; }
+  .model-options button strong { font-size: 14px; }
+  .model-options button span { font-size: 11px; line-height: 1.5; }
+  .time-heading { gap: 10px; }
+  .time-heading > div:first-child { width: 100%; }
+  .time-actions { width: 100%; }
+  .time-actions .text-button { flex: 1; padding: 10px 8px; font-size: 13px; }
+  .time-panel { margin: 12px 14px 0; padding: 14px 13px 12px; }
+  .continuous-key { gap: 8px; font-size: 11px; }
+  .intensity-scale { width: 45px; }
+  .continuous-model .node-symbol { font-size: 20px; }
+  .continuous-model .node-mini { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .continuous-model .node-body, #time-fill { transition: none; }
+}
+
+/* Keep labels legible where an influence passes close underneath. */
+.continuous-model .node-label,
+.continuous-model .node-mini {
+  paint-order: stroke fill;
+  stroke: var(--white);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+/* Self-feedback is distinct from the arrows between symptoms. */
+.intervention[hidden] { display: none; }
+.self-loop-path { fill: none; stroke: #6b8564; stroke-width: 2; pointer-events: none; }
+.self-loop-hit { fill: none; stroke: transparent; stroke-width: 14; cursor: pointer; }
+.self-loop:hover .self-loop-path,
+.self-loop:focus-visible .self-loop-path,
+.self-loop-selected .self-loop-path { stroke: #355d3f; stroke-width: 3; }
+.self-loop:focus-visible { outline: none; }
+.self-loop-lowered .self-loop-path { stroke: #8c9e85; stroke-dasharray: 4 3; }
+.self-loop-selected .self-loop-path { stroke: #355d3f; }
+
 </style>
 </head>
 <body>
@@ -257,9 +344,18 @@
         <div class="round-label"><span class="round-marker">01</span><span>THE DEPRESSION NETWORK<small>A small model. A systems-level challenge.</small></span></div>
       </section>
 
+      <section class="model-picker" aria-label="Underlying model">
+        <div><span class="section-kicker">CHOOSE YOUR MODEL</span><p id="model-summary">Symptoms switch on or off. Chance shapes the response.</p></div>
+        <div class="model-options" role="group" aria-label="Model choice">
+          <button type="button" data-model="ising" aria-pressed="true"><strong>Ising</strong><span>On / off symptoms</span></button>
+          <button type="button" data-model="dynamics" aria-pressed="false"><strong>Symptom dynamics</strong><span>Continuous intensity &amp; time</span></button>
+        </div>
+        <small>Switching models starts a fresh round.</small>
+      </section>
+
       <section class="metrics" aria-label="Round status">
-        <div class="metric budget"><span class="metric-label">YOUR TREATMENT BUDGET</span><div class="metric-main"><span id="coin-count">6 <span class="metric-muted">/ 6</span></span><div id="coins" class="coins" aria-label="6 coins remaining"></div></div><span class="metric-foot">Node: 1 · field: 2 · edge: 3 coins.</span></div>
-        <div class="metric"><span class="metric-label">ACTIVE SYMPTOMS</span><div class="metric-main"><span id="active-count">9<span class="metric-muted"> / 9</span></span><span id="state-tag" class="state-tag">High activity</span></div><span class="metric-foot">Switch off every symptom to win.</span></div>
+        <div class="metric budget"><span class="metric-label">YOUR TREATMENT BUDGET</span><div class="metric-main"><span id="coin-count">6 <span class="metric-muted">/ 6</span></span><div id="coins" class="coins" aria-label="6 coins remaining"></div></div><span id="budget-costs" class="metric-foot">Node: 1 · field: 2 · edge: 3 coins.</span></div>
+        <div class="metric"><span id="activity-label" class="metric-label">ACTIVE SYMPTOMS</span><div class="metric-main"><span id="active-count">9<span class="metric-muted"> / 9</span></span><span id="state-tag" class="state-tag">High activity</span></div><span id="activity-goal" class="metric-foot">Switch off every symptom to win.</span></div>
         <div class="metric outlook-metric"><span class="metric-label">GREEN NODES</span><div class="metric-main"><span id="recovery-count">0<span class="metric-muted"> / 9</span></span><span class="target-label">ALL NINE TO WIN</span></div><div class="outlook-track" role="progressbar" aria-label="Inactive green nodes" aria-valuemin="0" aria-valuemax="9" aria-valuenow="0"><span id="recovery-fill"></span></div><span class="metric-foot">Get the whole network green together.</span></div>
       </section>
 
@@ -271,7 +367,14 @@
             <div class="award-copy"><span class="section-kicker">LOOP BREAKER AWARD</span><h2>You broke the loop.</h2><p>All nine nodes are green.</p><span id="award-score" class="award-score"></span></div>
           </div>
           <div id="victory-confetti" class="victory-confetti" aria-hidden="true"></div>
-          <div class="network-stage"><svg id="network" viewBox="60 25 690 570" role="group" aria-label="Interactive depression symptom network"></svg><div class="graph-key"><span><i class="key-dot active-dot"></i>Active</span><span><i class="key-dot inactive-dot"></i>Inactive</span></div></div>
+          <div id="time-panel" class="time-panel" hidden>
+            <div class="time-heading"><div><span class="section-kicker">MODEL TIME</span><strong id="model-time">t = 0.0</strong><span id="time-status">Paused · choose a move</span></div><div class="time-actions"><button id="watch-time" class="text-button" type="button">▷ Watch +10</button><button id="pause-time" class="text-button" type="button" disabled>Ⅱ Pause</button></div></div>
+            <div class="time-track" role="progressbar" aria-label="Current time window" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="time-fill"></span></div>
+            <div class="trace-heading"><span>Average symptom intensity</span><strong id="mean-level">92%</strong></div>
+            <svg id="level-trace" viewBox="0 0 600 52" role="img" aria-label="Average symptom intensity over model time"><path class="trace-green" d="M0 47H600"/><path id="level-trace-line" d=""/></svg>
+            <p>Time pauses between moves. Watch +10 lets time pass without treatment or a coin charge. Units are model time, not days.</p>
+          </div>
+          <div class="network-stage"><svg id="network" viewBox="60 25 690 570" role="group" aria-label="Interactive depression symptom network"></svg><div id="binary-key" class="graph-key"><span><i class="key-dot active-dot"></i>Active</span><span><i class="key-dot inactive-dot"></i>Inactive</span></div><div id="continuous-key" class="graph-key continuous-key" hidden><span><i class="key-dot inactive-dot"></i>Green ≤ 10%</span><span class="intensity-scale" aria-hidden="true"></span><span><i class="key-dot active-dot"></i>High intensity</span></div></div>
           <div id="turn-message" class="turn-message" role="status" aria-live="polite"><span class="message-icon" aria-hidden="true">↳</span><span>Start by choosing an intervention, then select its target in the network.</span></div>
         </section>
 
@@ -279,13 +382,14 @@
           <div class="panel-heading treatment-title"><div><span class="section-kicker">YOUR NEXT MOVE</span><h2 id="treatment-heading">Choose an intervention</h2></div></div>
           <div class="intervention-list" role="group" aria-label="Intervention type">
             <button class="intervention selected" type="button" data-type="node" aria-pressed="true"><span class="intervention-icon node-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 3v9M6.4 6.4a8 8 0 1 0 11.2 0"/></svg></span><span class="intervention-copy"><strong>Switch off a node <span class="intervention-price">1 coin</span></strong><span>A one-time push. It can turn back on.</span></span><span class="choice-indicator" aria-hidden="true"></span></button>
+            <button class="intervention" type="button" data-type="self" aria-pressed="false" hidden><span class="intervention-icon self-icon" aria-hidden="true">↻</span><span class="intervention-copy"><strong>Lower self-feedback <span class="intervention-price">1 coin</span></strong><span>Lower the loop from 0.30 to 0.10 for this round.</span></span><span class="choice-indicator" aria-hidden="true"></span></button>
             <button class="intervention" type="button" data-type="field" aria-pressed="false"><span class="intervention-icon field-icon" aria-hidden="true">↓</span><span class="intervention-copy"><strong>Shift a node’s field <span class="intervention-price">2 coins</span></strong><span>Make a symptom less likely to activate.</span></span><span class="choice-indicator" aria-hidden="true"></span></button>
             <button class="intervention" type="button" data-type="edge" aria-pressed="false"><span class="intervention-icon edge-icon" aria-hidden="true">↔</span><span class="intervention-copy"><strong>Remove an edge <span class="intervention-price">3 coins</span></strong><span>Break one connection for this round.</span></span><span class="choice-indicator" aria-hidden="true"></span></button>
           </div>
           <div class="target-box" id="target-box"><span class="section-kicker" id="target-kicker">SELECT A SYMPTOM</span><h3 id="target-name">Where will you intervene?</h3><p id="target-description">Click a coral node in the network. Switching it off gives the system a push, but does not change its connections.</p><div id="target-detail" class="target-detail" hidden></div></div>
           <div class="forecast-area"><button id="buy-forecast" class="forecast-button" type="button" disabled><span><span aria-hidden="true">⌁</span> Buy a forecast</span><span>1 coin</span></button><p id="forecast-note" class="forecast-note">Optional: spend a coin to preview your selected move.</p><div id="forecast-result" class="forecast-result" hidden aria-live="polite"></div></div>
           <button id="apply" class="primary-button" type="button" disabled><span id="apply-label">Select a target</span><span class="button-cost"><span aria-hidden="true">◈</span> <span id="treatment-cost" class="cost-value">1</span></span></button>
-          <p class="timing-note">The network responds for up to two sweeps. All nine green ends the round.</p>
+          <p id="timing-note" class="timing-note">The network responds for up to two sweeps. All nine green ends the round.</p>
           <div class="round-actions"><button id="undo" class="text-button" type="button" disabled>↶ Undo · 1 coin</button><button id="restart" class="text-button" type="button">↻ Restart round</button></div>
           <div id="result" class="result" role="status" hidden></div>
         </aside>
@@ -308,10 +412,11 @@
   </dialog>
 
   <dialog id="learn-dialog" aria-labelledby="learn-title"><div class="dialog-content"><div class="dialog-top"><span class="eyebrow">A SHORT FIELD GUIDE</span><button class="close-button" id="close-learn" type="button" aria-label="Close the learning guide">×</button></div><h2 id="learn-title">When symptoms form a system.</h2><p class="dialog-lead">A symptom can be both a consequence and a cause. Sleep problems can contribute to fatigue; fatigue can feed other difficulties. Strong feedback can keep a network active after its original trigger has gone.</p>
-    <div class="learning-grid"><section><span class="lesson-number">01</span><h3>Change a state</h3><p>A node intervention sets one symptom to <strong>inactive once</strong>. Its field and connections stay the same. If its neighbours keep supplying activation, it can switch back on—even during the next sweep.</p></section><section><span class="lesson-number">02</span><h3>Change a disposition</h3><p>A field intervention lowers one node’s activation parameter by 1.5 for the rest of the round. It makes activation less likely, without forcing the symptom off. You can apply it more than once to a node.</p></section><section><span class="lesson-number">03</span><h3>Change a connection</h3><p>An edge intervention sets one interaction weight to zero for the rest of the round. It removes that direct influence in both directions. Other paths through the network remain.</p></section></div>
-    <section class="rules-section"><h3>What counts as a win?</h3><p>Use at most six coins to get <strong>all nine nodes green at the same time</strong>. The game checks immediately after your intervention and after each response sweep. When all nine are inactive, the round ends and you earn the <strong>Loop Breaker award</strong>. One or two active symptoms still means there is work to do.</p><p><strong>Node switches cost 1 coin. Field shifts cost 2 coins and edge removals cost 3 coins.</strong> The six-coin budget counts what you spend. Undo costs 1 additional coin; the original action price and earlier undo fees stay spent. It restores the last active action’s network state or forecast, and is unavailable when no coins remain. You need enough coins to pay for a treatment before applying it.</p><p>A sweep is nine random node-update opportunities; a node may be chosen more than once. Each treatment is followed by up to two sweeps, stopping as soon as the whole network is green. The green-node counter shows your current progress.</p><p><strong>A forecast is an optional tip that costs one coin.</strong> Select an intervention and its target, then buy a preview. It compares the exact chance of all nine nodes being green after six sweeps with and without that intervention. This is a fixed-horizon projection of the model, not the probability of winning at any earlier checkpoint. Buying a forecast does not apply treatment or advance the network. The forecast stays available for that selection until the next treatment; a changed network needs a new forecast. Forecasts count toward your six-coin budget and final score.</p><p>Symptoms are binary and their updates are stochastic: a good forecast is not a promise. Restart reuses the same random sequence, so you can compare strategies; undo restores the random sequence, costs one coin, and keeps earlier spending charged. Forecast probabilities are calculated exactly, not estimated from repeated simulations.</p><p>The all-green goal is a game rule, not a clinical diagnostic or recovery criterion. The nine nodes group the nine depression symptom criteria; the weights and fields are illustrative, not fitted patient data or the original Cramer network.</p></section>
-    <details><summary>The model, in a little more detail</summary><div class="model-details"><p>We use a 0/1-coded Ising model. For the selected node <em>i</em>, the probability of being active on its next update is:</p><div class="formula">pᵢ = 1 / [1 + exp(−(τᵢ + Σⱼ wᵢⱼ xⱼ))]</div><p>Lowering τᵢ reduces activation, matching the NIRA activation-parameter convention. Each update chooses one node uniformly at random. This single-site Gibbs rule has stationary probability:</p><div class="formula">P(x) ∝ exp(Σᵢ τᵢ xᵢ + Σᵢ&lt;ⱼ wᵢⱼ xᵢ xⱼ)</div><p>With nine binary nodes there are 512 states. We propagate probability across all states for 54 updates to calculate the six-sweep outlook exactly. A node intervention moves the current state only; an edge or field intervention changes the transition probabilities.</p><p>This is inspired by Cramer et al.’s dynamic framework, using asynchronous updates consistent with the joint Ising distribution rather than reproducing their synchronous update rule. The supplied Epskamp chapter uses −1/+1 coding in Equation 8; our parameters are defined directly in 0/1 coding and are not copied across conventions.</p></div></details>
-    <section class="references"><h3>Ideas behind the game</h3><p>Borsboom (2017). <em>A network theory of mental disorders.</em> World Psychiatry, 16, 5–13. DOI: 10.1002/wps.20375.</p><p>Cramer et al. (2016). <em>Major Depression as a Complex Dynamic System.</em> PLOS ONE, 11, e0167490. DOI: 10.1371/journal.pone.0167490.</p><p>Epskamp, Maris, Waldorp &amp; Borsboom. <em>Network Psychometrics.</em> Supplied chapter, arXiv:1609.02818v2.</p><p>Lunansky et al. <em>Intervening on psychopathology networks: Evaluating intervention targets through simulations.</em> Methods. Supplied NIRA paper.</p></section>
+    <div class="learning-grid"><section><span class="lesson-number">01</span><h3>Change a state</h3><p>A node intervention changes a symptom’s current state once: <strong>off in Ising, or a reduction of 25 percentage points in the continuous model (stopping at 10%)</strong>. Its field and connections stay the same, and it can rise again as the network evolves.</p></section><section><span class="lesson-number">02</span><h3>Change a disposition</h3><p>A field intervention lowers τᵢ by 1.5 in Ising, or βᵢ by 0.25 in symptom dynamics, for the rest of the round. It reduces the tendency to activate, without forcing the current state to change. You can apply it more than once.</p></section><section><span class="lesson-number">03</span><h3>Change a connection</h3><p>An edge intervention sets one interaction weight to zero for the rest of the round. In Ising it removes both directions; in symptom dynamics it removes <strong>only the selected arrow</strong>. Other paths remain.</p></section></div>
+    <section class="rules-section"><h3>What counts as a win?</h3><p>Use at most six coins to get <strong>all nine nodes green at the same time</strong> and earn the <strong>Loop Breaker award</strong>. In Ising, green means off. In symptom dynamics, green means intensity ≤ 10%; this display band is a game choice because noisy continuous values rarely equal exactly zero. This is not a clinical recovery criterion.</p><p><strong>In symptom dynamics, all four interventions cost 1 coin each: node, self-feedback, field and directed edge. In Ising, node switches cost 1 coin, field shifts cost 2 coins and symmetric edge removals cost 3 coins.</strong> Forecasts and undo each cost 1 coin. Undo restores the last action, including the clock and random sequence in the continuous model. Earlier spending stays spent. No undo is available at zero coins; an unsuccessful final response opens Play again automatically.</p><p><strong>Ising:</strong> each treatment is followed by up to two sweeps. A sweep is nine random single-node updates with replacement. The game checks for all green immediately after intervention and after each sweep. A paid forecast calculates the exact all-off probability after six sweeps by enumerating 512 states.</p><p><strong>Self-feedback:</strong> each continuous-model node has a visible loop, initially αᵢᵢ = 0.30 (Park et al., Table 3, base setting). For 1 coin, lower one loop to 0.10 for the rest of the round. This is the self-feedback value in the paper’s high-resilience setting; the intervention changes only that coefficient, leaving the boost factor and all other parameters unchanged. It does not reset intensity and cannot be stacked on an already lowered loop. Choose the card and a node, or click its loop. Dashed loops have been lowered. A forecast can preview this intervention; undo restores the loop.</p><p><strong>Symptom dynamics:</strong> intensity follows the continuous-time model of Park, Waldorp &amp; Vasconcelos (2026). A treatment is followed by up to 20 model-time units, with gradual colours, percentage levels, and a live clock. Pause freezes the playback; Resume continues the same response. Time pauses between moves. Watch +10 advances 10 units with no treatment or coin charge. The game checks all green at each numerical step and stops at the first success.</p><p>Its paid forecast estimates the chance of all nine intensities being ≤ 10% <strong>at 40 model-time units</strong>, using 256 simulated paths per scenario; it also shows expected average intensity. This is an approximate fixed-horizon forecast, not an exact probability or the chance of winning earlier. Zero successes means 0/256, not proof of impossibility. Separate random sequences keep buying a tip from changing the round. A new treatment or passage of time clears current tips.</p><p>Both models are stochastic. Restart reuses the same random sequence to compare strategies. Time units are dimensionless, not calibrated days. Parameters, treatment doses and game rules are illustrative, not fitted to an individual.</p></section>
+    <details><summary>The Ising model</summary><div class="model-details"><p>In Ising mode, we use a 0/1-coded model. For the selected node <em>i</em>, the probability of being active on its next update is:</p><div class="formula">pᵢ = 1 / [1 + exp(−(τᵢ + Σⱼ wᵢⱼ xⱼ))]</div><p>Lowering τᵢ reduces activation, matching the NIRA activation-parameter convention. Each update chooses one node uniformly at random. This single-site Gibbs rule has stationary probability:</p><div class="formula">P(x) ∝ exp(Σᵢ τᵢ xᵢ + Σᵢ&lt;ⱼ wᵢⱼ xᵢ xⱼ)</div><p>With nine binary nodes there are 512 states. We propagate probability across all states for 54 updates to calculate the six-sweep outlook exactly. A node intervention moves the current state only; an edge or field intervention changes the transition probabilities.</p><p>This is inspired by Cramer et al.’s dynamic framework, using asynchronous updates consistent with the joint Ising distribution rather than reproducing their synchronous update rule. The supplied Epskamp chapter uses −1/+1 coding in Equation 8; our parameters are defined directly in 0/1 coding and are not copied across conventions.</p></div></details>
+    <details><summary>The continuous-time model</summary><div class="model-details"><p>Park, Waldorp &amp; Vasconcelos (2026), Equation 2, with f(s) = s²:</p><div class="formula">dsᵢ = sᵢ(1 − sᵢ)[βᵢ + αᵢᵢsᵢ + (1 + δᵢsᵢ²) Σⱼ≠ᵢ αⱼᵢsⱼ] dt + σᵢ dWᵢ</div><p>Arrows show source → target influences from Appendix A4. Self-feedback αᵢᵢ = 0.30 is shown as a loop at each node, with a 1-coin intervention to lower one coefficient to 0.10; δᵢ = 9.50 is the base setting in Table 3. Baseline β uses the normal-period values in Table 2. Independent additive Gaussian noise and reflecting boundaries keep intensities between 0 and 1. The simulation uses Euler–Maruyama integration with Δt = 0.02.</p><p>For this game we choose an initial intensity of 0.92, noise strength σ = 0.10, a field reduction of 0.25, and a green band at ≤ 0.10. A one-time node intervention subtracts 0.25 from intensity, with a floor of 0.10; for example, 0.90 becomes 0.65. It does not guarantee a green node. These are game settings, rather than a reproduction of the paper’s shock experiment. Intensities can recover or rebound; there is no imposed decay. Directed coupling makes this a different model from the Ising network. Its forecasts are simulation estimates and do not use the Ising equilibrium formula.</p></div></details>
+    <section class="references"><h3>Ideas behind the game</h3><p>Park, Waldorp &amp; Vasconcelos (2026). <em>A Mechanistic Model of Symptom Dynamics: Implications for Statistical Network Analyses.</em> Multivariate Behavioral Research. DOI: 10.1080/00273171.2026.2710730. Equations 1–2, Tables 2–3, Appendix A4 &amp; F.</p><p>Borsboom (2017). <em>A network theory of mental disorders.</em> World Psychiatry, 16, 5–13. DOI: 10.1002/wps.20375.</p><p>Cramer et al. (2016). <em>Major Depression as a Complex Dynamic System.</em> PLOS ONE, 11, e0167490. DOI: 10.1371/journal.pone.0167490.</p><p>Epskamp, Maris, Waldorp &amp; Borsboom. <em>Network Psychometrics.</em> Supplied chapter, arXiv:1609.02818v2.</p><p>Lunansky et al. <em>Intervening on psychopathology networks: Evaluating intervention targets through simulations.</em> Methods. Supplied NIRA paper.</p></section>
     <button id="back-to-game" class="primary-button" type="button">Back to the network <span aria-hidden="true">↗</span></button>
   </div></dialog>
 <script>
@@ -462,13 +567,157 @@
 
 </script>
 <script>
+(function (root) {
+  'use strict';
+
+  // Park, Waldorp & Vasconcelos (2026), Eq. 2, Table 2 (normal),
+  // Table 3 (base), and Appendix A4. Matrix rows are SOURCES, columns TARGETS.
+  // Independently implemented from the published equations, not the R source.
+  const N = 9;
+  const paperOrder = ['interest', 'mood', 'sleep', 'fatigue', 'appetite', 'worthlessness', 'concentration', 'psychomotor', 'death'];
+  const gameOrder = ['mood', 'interest', 'sleep', 'fatigue', 'concentration', 'worthlessness', 'psychomotor', 'appetite', 'death'];
+  const matrix = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [.33, 0, .14, .15, 0, .13, 0, 0, .15],
+    [.13, .14, 0, .22, .23, 0, 0, 0, 0],
+    [.21, .15, .22, 0, 0, 0, .12, 0, 0],
+    [0, 0, 0, .17, 0, 0, 0, 0, 0],
+    [0, .13, 0, 0, .15, 0, .20, .15, .22],
+    [0, 0, 0, 0, 0, 0, 0, .17, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, .30, 0]
+  ];
+  const beta = [-1.37, -1.02, -.93, -1.19, -.96, -.61, -.88, -1.30, -2.30];
+  // Game choices, not fitted parameters: noise strength, initial condition,
+  // field dose, observation windows, numerical step, and green display band.
+  const settings = Object.freeze({ dt: .02, noise: .10, initialLevel: .92,
+    greenLimit: .10, nodeReduction: .25, fieldDose: .25, responseTime: 20, watchTime: 10,
+    forecastTime: 40, forecastPaths: 256 });
+
+  function createModel() {
+    const edges = [];
+    matrix.forEach((row, source) => row.forEach((weight, destination) => {
+      if (weight) edges.push({ a: gameOrder.indexOf(paperOrder[source]),
+        b: gameOrder.indexOf(paperOrder[destination]), weight, removed: false });
+    }));
+    return { edges, thresholds: gameOrder.map(id => beta[paperOrder.indexOf(id)]),
+      fieldDoses: Array(N).fill(0), self: Array(N).fill(.30),
+      boost: Array(N).fill(9.50), noise: Array(N).fill(settings.noise) };
+  }
+  function cloneModel(model) {
+    return { edges: model.edges.map(edge => ({ ...edge })),
+      thresholds: [...model.thresholds], fieldDoses: [...model.fieldDoses],
+      self: [...model.self], boost: [...model.boost], noise: [...model.noise] };
+  }
+  const initialState = () => Array(N).fill(settings.initialLevel);
+  const isOn = (state, node) => state[node] > settings.greenLimit;
+  const activeCount = state => state.filter(x => x > settings.greenLimit).length;
+  const isWon = state => state.every(x => x <= settings.greenLimit);
+  const mean = state => state.reduce((sum, x) => sum + x, 0) / N;
+  // Repeated folding also handles steps that cross more than one boundary.
+  function reflect(value) {
+    const folded = ((value % 2) + 2) % 2;
+    return folded > 1 ? 2 - folded : folded;
+  }
+  function drift(model, state) {
+    const incoming = Array(N).fill(0);
+    for (const edge of model.edges) if (!edge.removed) incoming[edge.b] += edge.weight * state[edge.a];
+    return state.map((s, i) => s * (1 - s) *
+      (model.thresholds[i] + model.self[i] * s + incoming[i] * (1 + model.boost[i] * s * s)));
+  }
+  // Explicit RNG state makes pause, forecast, and paid undo independent of
+  // browser frame timing. Box-Muller generates independent Gaussian pairs.
+  function randomGenerator(seed = 271828) {
+    let value = seed >>> 0;
+    const random = () => {
+      value = (value + 0x6D2B79F5) >>> 0;
+      let t = value;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    random.snapshot = () => value;
+    random.restore = snapshot => { value = snapshot >>> 0; };
+    return random;
+  }
+  function step(model, state, random, dt = settings.dt) {
+    const change = drift(model, state);
+    const next = Array(N);
+    for (let i = 0; i < N; i += 2) {
+      const radius = Math.sqrt(-2 * Math.log(Math.max(Number.MIN_VALUE, random())));
+      const angle = 2 * Math.PI * random();
+      next[i] = reflect(state[i] + change[i] * dt + model.noise[i] * Math.sqrt(dt) * radius * Math.cos(angle));
+      if (i + 1 < N) next[i + 1] = reflect(state[i + 1] + change[i + 1] * dt + model.noise[i + 1] * Math.sqrt(dt) * radius * Math.sin(angle));
+    }
+    return next;
+  }
+  function intervene(model, state, type, target) {
+    const next = [...state];
+    if (type === 'node' && next[target] > settings.greenLimit) {
+      next[target] = Math.max(settings.greenLimit, next[target] - settings.nodeReduction);
+    } // one-time reduction; subsequent dynamics are never clamped
+    if (type === 'self') model.self[target] = Math.min(model.self[target], .10);
+    if (type === 'field') { model.thresholds[target] -= settings.fieldDose; model.fieldDoses[target]++; }
+    if (type === 'edge') model.edges[target].removed = true;
+    return next;
+  }
+  function trajectory(model, state, random, duration, stopAtGreen = false) {
+    const samples = [{ time: 0, state: [...state] }];
+    let next = [...state];
+    const steps = Math.round(duration / settings.dt);
+    let completed = 0;
+    if (stopAtGreen && isWon(next)) return { state: next, elapsed: 0, samples };
+    for (let i = 0; i < steps; i++) {
+      next = step(model, next, random);
+      completed = i + 1;
+      const done = stopAtGreen && isWon(next);
+      if (completed % 10 === 0 || completed === steps || done) samples.push({ time: completed * settings.dt, state: [...next] });
+      if (done) break;
+    }
+    return { state: next, elapsed: completed * settings.dt, samples };
+  }
+  // A fixed-horizon Monte Carlo estimate; separate, paired seeds for the two
+  // scenarios reduce comparison noise and never consume the player's RNG.
+  function forecast(model, state, type, target, paths = settings.forecastPaths) {
+    const altered = cloneModel(model);
+    const switched = intervene(altered, state, type, target);
+    let baseline = 0, projected = 0, baselineMean = 0, projectedMean = 0;
+    for (let path = 0; path < paths; path++) {
+      const seed = (73471 + path * 104729) >>> 0;
+      let before = [...state], after = [...switched];
+      const r1 = randomGenerator(seed), r2 = randomGenerator(seed);
+      for (let i = 0; i < Math.round(settings.forecastTime / settings.dt); i++) {
+        before = step(model, before, r1);
+        after = step(altered, after, r2);
+      }
+      if (isWon(before)) baseline++;
+      if (isWon(after)) projected++;
+      baselineMean += mean(before); projectedMean += mean(after);
+    }
+    return { baseline: baseline / paths, projected: projected / paths,
+      baselineMean: baselineMean / paths, projectedMean: projectedMean / paths, paths };
+  }
+  const api = { N, settings, paperOrder, gameOrder, matrix, beta, createModel,
+    cloneModel, initialState, isOn, activeCount, isWon, mean, reflect, drift,
+    randomGenerator, step, intervene, trajectory, forecast };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.LoopDynamics = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+</script>
+<script>
 (function () {
   'use strict';
-  const M = window.LoopModel;
+  const I = window.LoopModel;
+  const D = window.LoopDynamics;
+  let modelMode = window.location.hash === '#dynamics' ? 'dynamics' : 'ising';
+  let M = modelMode === 'dynamics' ? D : I;
+  const continuous = () => modelMode === 'dynamics';
   const $ = id => document.getElementById(id);
   const svgNS = 'http://www.w3.org/2000/svg';
   const budget = 6;
-  const treatmentCosts = Object.freeze({ node: 1, edge: 3, field: 2 });
+  const isingTreatmentCosts = Object.freeze({ node: 1, self: 1, edge: 3, field: 2 });
+  const treatmentCost = actionType => continuous() ? 1 : isingTreatmentCosts[actionType];
   const forecastCost = 1;
   const undoCost = 1;
   const seed = 271828;
@@ -478,7 +727,8 @@
   const initialMessages = {
     node: 'Click an active symptom. Switching it off gives the system a push, but does not change its connections.',
     edge: 'Click a connection between two symptoms. Removing it breaks this direct influence in both directions for the rest of the round.',
-    field: 'Click any symptom. Lowering its activation parameter makes it less likely to turn on for the rest of the round.'
+    field: 'Click any symptom. Lowering its activation parameter makes it less likely to turn on for the rest of the round.',
+    self: 'Choose a symptom or its loop. Lower self-feedback from 0.30 to 0.10 for this round.'
   };
 
   let model, state, random, history, ledger, purchased, treatmentVersion;
@@ -489,6 +739,10 @@
   let celebrationPlayed = false;
   let celebrationTimer = null;
   let exhaustionPromptShown = false;
+  let modelTime = 0;
+  let timeTrace = [];
+  let animationPaused = false;
+  let responseProgress = 0;
 
   function element(tag, className, text) {
     const el = document.createElement(tag);
@@ -514,42 +768,84 @@
     message.append(element('span', 'message-detail', text));
   }
   function targetName(actionType, actionTarget) {
+    if (actionType === 'wait') return 'Model time';
     if (actionType === 'edge') {
       const e = model.edges[actionTarget];
-      return `${M.symptoms[e.a].short} ↔ ${M.symptoms[e.b].short}`;
+      return `${I.symptoms[e.a].short} ${continuous() ? '→' : '↔'} ${I.symptoms[e.b].short}`;
     }
-    return M.symptoms[actionTarget].short;
+    return I.symptoms[actionTarget].short;
   }
   function cacheKey() { return `${treatmentVersion}:${type}:${target}`; }
   function validTarget() {
     if (target === null) return false;
     if (type === 'node') return M.isOn(state, target);
+    if (type === 'self') return continuous() && model.self[target] > .10;
     if (type === 'edge') return !model.edges[target].removed;
     return true;
   }
-  function isWon() { return state === 0; }
+  function isWon() { return continuous() ? D.isWon(state) : state === 0; }
   function coinsSpent() { return ledger.reduce((sum, entry) => sum + entry.cost, 0); }
   function coinsRemaining() { return budget - coinsSpent(); }
   function coinLabel(amount) { return `${amount} ${amount === 1 ? 'coin' : 'coins'}`; }
 
+  function routedInfluence(edge, a, b) {
+    // Presentation routes only: node positions and the mechanistic graph stay
+    // fixed. The two upper lanes bypass Loss of interest; the lower outer
+    // lane takes Worthlessness -> Appetite below Poor concentration.
+    const routes = {
+      '0:5': [[530, 15], [600, 130]],
+      '5:0': [[790, 120], [450, -5]],
+      '5:7': [[750, 205], [760, 395], [635, 405], [500, 420], [320, 405]]
+    };
+    const controls = routes[`${edge.a}:${edge.b}`];
+    if (!controls) return null;
+    const first = controls[0], last = controls[controls.length - 1];
+    const startLength = Math.hypot(first[0] - a.x, first[1] - a.y);
+    const endLength = Math.hypot(b.x - last[0], b.y - last[1]);
+    const start = [a.x + (first[0] - a.x) / startLength * 35, a.y + (first[1] - a.y) / startLength * 35];
+    const end = [b.x - (b.x - last[0]) / endLength * 38, b.y - (b.y - last[1]) / endLength * 38];
+    const points = [...controls, end];
+    return `M${start.join(',')} C${points.slice(0, 3).map(p => p.join(',')).join(' ')}${points.length > 3 ? ` C${points.slice(3).map(p => p.join(',')).join(' ')}` : ''}`;
+  }
+
   function drawNetwork(previousState = state, interventionTarget = null) {
     const svg = $('network');
     svg.replaceChildren();
-    svg.dataset.state = state;
+    svg.dataset.state = continuous() ? JSON.stringify(state) : state;
     svg.classList.toggle('edge-mode', type === 'edge');
+    if (continuous()) {
+      const defs = svgElement('defs', {});
+      const marker = svgElement('marker', { id: 'influence-arrow', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto', markerUnits: 'userSpaceOnUse' });
+      marker.append(svgElement('path', { d: 'M0 0L10 5L0 10Z', fill: '#587b8e' }));
+      const selfMarker = svgElement('marker', { id: 'self-loop-arrow', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 6, markerHeight: 6, orient: 'auto', markerUnits: 'userSpaceOnUse' });
+      selfMarker.append(svgElement('path', { d: 'M0 0L10 5L0 10Z', fill: '#6b8564' }));
+      defs.append(marker, selfMarker); svg.append(defs);
+    }
     const edgesGroup = svgElement('g', { 'aria-label': 'Symptom connections' });
     model.edges.forEach((edge, index) => {
-      const a = M.symptoms[edge.a], b = M.symptoms[edge.b];
-      const coords = { x1: a.x, y1: a.y, x2: b.x, y2: b.y };
+      const a = I.symptoms[edge.a], b = I.symptoms[edge.b];
+      let coords = { x1: a.x, y1: a.y, x2: b.x, y2: b.y };
+      const shape = continuous() ? 'path' : 'line';
+      if (continuous()) {
+        const dx = b.x - a.x, dy = b.y - a.y, length = Math.hypot(dx, dy);
+        const ux = dx / length, uy = dy / length;
+        const bend = model.edges.some(e => e.a === edge.b && e.b === edge.a) ? 22 : 0;
+        const cx = (a.x + b.x) / 2 - uy * bend, cy = (a.y + b.y) / 2 + ux * bend;
+        const startLength = Math.hypot(cx - a.x, cy - a.y), endLength = Math.hypot(b.x - cx, b.y - cy);
+        coords = { d: routedInfluence(edge, a, b) || `M${a.x + (cx - a.x) / startLength * 35},${a.y + (cy - a.y) / startLength * 35} Q${cx},${cy} ${b.x - (b.x - cx) / endLength * 38},${b.y - (b.y - cy) / endLength * 38}` };
+      }
       const active = M.isOn(state, edge.a) && M.isOn(state, edge.b);
-      const line = svgElement('line', { ...coords,
+      const line = svgElement(shape, { ...coords,
         class: `edge-visible${active ? ' edge-active' : ''}${edge.removed ? ' edge-removed' : ''}${type === 'edge' && target === index ? ' edge-selected' : ''}`,
-        'stroke-width': 1.6 + edge.weight * 1.2 });
+        'stroke-width': continuous() ? 1.5 + edge.weight * 5 : 1.6 + edge.weight * 1.2,
+        'data-connection': `${edge.a}:${edge.b}`,
+        ...(continuous() && !edge.removed ? { 'marker-end': 'url(#influence-arrow)' } : {}) });
       edgesGroup.append(line);
       if (turnAnimation?.stage === 'applied' && turnAnimation.type === 'edge' && turnAnimation.target === index) {
-        const removal = svgElement('line', { ...coords, class: 'edge-removal', 'stroke-width': 5 });
+        const removal = svgElement(shape, { ...coords, class: 'edge-removal', 'stroke-width': 5 });
         edgesGroup.append(removal);
-        const cut = svgElement('g', { transform: `translate(${(a.x + b.x) / 2},${(a.y + b.y) / 2})`, class: 'edge-cut', 'aria-hidden': 'true' });
+        const point = continuous() ? line.getPointAtLength(line.getTotalLength() / 2) : { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+        const cut = svgElement('g', { transform: `translate(${point.x},${point.y})`, class: 'edge-cut', 'aria-hidden': 'true' });
         cut.append(svgElement('circle', { r: 18 }));
         const symbol = svgElement('text', { x: 0, y: 1 });
         symbol.textContent = '×';
@@ -557,8 +853,8 @@
         edgesGroup.append(cut);
       }
       if (!edge.removed && type === 'edge') {
-        const hit = svgElement('line', { ...coords, class: 'edge-hit', tabindex: '0', role: 'button',
-          'aria-label': `Remove connection: ${a.short} and ${b.short}`, 'aria-pressed': target === index,
+        const hit = svgElement(shape, { ...coords, class: 'edge-hit', tabindex: '0', role: 'button',
+          'aria-label': continuous() ? `Remove arrow: ${a.short} to ${b.short}` : `Remove connection: ${a.short} and ${b.short}`, 'aria-pressed': target === index,
           'data-edge': index });
         activateWithKeyboard(hit, () => selectTarget(index));
         hit.addEventListener('pointerenter', () => line.classList.add('edge-hover'));
@@ -567,13 +863,39 @@
       }
     });
     svg.append(edgesGroup);
+    if (continuous()) {
+      const loops = svgElement('g', { 'aria-label': 'Self-feedback loops' });
+      // Use the free side of each existing node; its position is unchanged.
+      const angles = [-145, 0, -155, 165, -90, 0, 0, 180, 180];
+      I.symptoms.forEach((symptom, index) => {
+        const angle = angles[index] * Math.PI / 180;
+        const point = (radius, offset) => [symptom.x + Math.cos(angle + offset) * radius, symptom.y + Math.sin(angle + offset) * radius];
+        const start = point(40, -.46), first = point(88, -.78), second = point(88, .78), end = point(40, .46);
+        const selected = type === 'self' && target === index;
+        const loop = svgElement('g', { class: `self-loop${model.self[index] <= .10 ? ' self-loop-lowered' : ''}${selected ? ' self-loop-selected' : ''}`,
+          'data-self-loop': index, 'data-weight': model.self[index].toFixed(2), tabindex: '0', role: 'button',
+          'aria-label': `${symptom.short}: self-feedback ${model.self[index].toFixed(2)}.${model.self[index] <= .10 ? ' Already lowered.' : ' Lower to 0.10 for 1 coin.'}`, 'aria-pressed': selected });
+        const title = svgElement('title', {});
+        title.textContent = `${symptom.short} · Self-feedback αᵢᵢ = ${model.self[index].toFixed(2)}${model.self[index] <= .10 ? ' · Already lowered' : ' · Lower to 0.10 for 1 coin'}`;
+        loop.append(title);
+        const geometry = { d: `M${start.join(',')} C${first.join(',')} ${second.join(',')} ${end.join(',')}` };
+        loop.append(svgElement('path', { ...geometry, class: 'self-loop-path', 'marker-end': 'url(#self-loop-arrow)' }));
+        loop.append(svgElement('path', { ...geometry, class: 'self-loop-hit' }));
+        activateWithKeyboard(loop, () => {
+          if (phase !== 'playing') return;
+          type = 'self'; target = index; drawNetwork(); renderSelection();
+        });
+        loops.append(loop);
+      });
+      svg.append(loops);
+    }
     const nodesGroup = svgElement('g', { 'aria-label': 'Nine depression symptoms' });
-    M.symptoms.forEach((symptom, index) => {
+    I.symptoms.forEach((symptom, index) => {
       const on = M.isOn(state, index);
       const changed = on !== M.isOn(previousState, index);
       const affected = turnAnimation && turnAnimation.type !== 'edge' && turnAnimation.target === index;
       const applied = affected && turnAnimation.stage === 'applied';
-      const reactivated = affected && turnAnimation.type === 'node' && !applied && on;
+      const reactivated = affected && turnAnimation.type === 'node' && !applied && (continuous() ? state[index] > turnAnimation.appliedLevel + .005 : on);
       const node = svgElement('g', { transform: `translate(${symptom.x},${symptom.y})`,
         class: `network-node${on ? '' : ' inactive'}${type !== 'edge' && target === index ? ' selected' : ''}${changed ? ' changed' : ''}${interventionTarget === index ? ' intervened' : ''}${applied ? (turnAnimation.type === 'node' ? ' node-intervention' : ' field-intervention') : ''}${reactivated ? ' reactivated' : ''}`,
         tabindex: type === 'edge' ? '-1' : '0', role: 'button', 'aria-label': `${symptom.name}: ${on ? 'active' : 'inactive'}${model.fieldDoses[index] ? `, ${model.fieldDoses[index]} field shifts` : ''}`,
@@ -604,7 +926,7 @@
         const callout = svgElement('g', { class: `action-callout${reactivated ? ' reactivation-callout' : ''}`, 'aria-hidden': 'true' });
         callout.append(svgElement('rect', { x: -75, y: -69, width: 150, height: 25, rx: 12.5 }));
         const text = svgElement('text', { x: 0, y: -56 });
-        text.textContent = applied ? (turnAnimation.type === 'node' ? '✓ SWITCHED OFF' : '↓ FIELD LOWERED') : reactivated ? '↻ REACTIVATED' : 'STILL INACTIVE';
+        text.textContent = applied ? (turnAnimation.type === 'node' ? continuous() ? `${percent(turnAnimation.beforeLevel)} → ${percent(turnAnimation.appliedLevel)}` : '✓ SWITCHED OFF' : turnAnimation.type === 'self' ? '↻ SELF-FEEDBACK 0.10' : '↓ FIELD LOWERED') : reactivated ? continuous() ? '↑ RISING AGAIN' : '↻ REACTIVATED' : continuous() ? 'STILL REDUCED' : 'STILL INACTIVE';
         callout.append(text);
         node.append(callout);
       }
@@ -612,6 +934,80 @@
       nodesGroup.append(node);
     });
     svg.append(nodesGroup);
+    if (continuous()) updateDynamicVisuals();
+  }
+
+  function levelColour(level) {
+    if (level <= D.settings.greenLimit) return '#92b283';
+    const stops = [[146, 178, 131], [218, 200, 155], [212, 121, 102]];
+    const position = (level - D.settings.greenLimit) / (1 - D.settings.greenLimit) * 2;
+    const index = Math.min(1, Math.floor(position)), mix = position - index;
+    return `rgb(${stops[index].map((v, i) => Math.round(v + (stops[index + 1][i] - v) * mix)).join(',')})`;
+  }
+
+  function updateDynamicVisuals() {
+    const drift = D.drift(model, state);
+    $('network').dataset.state = JSON.stringify(state);
+    $('network').querySelectorAll('[data-node]').forEach(node => {
+      const index = Number(node.dataset.node), level = state[index], green = !D.isOn(state, index);
+      node.classList.toggle('inactive', green);
+      node.dataset.level = level.toFixed(6);
+      node.setAttribute('aria-label', `${I.symptoms[index].name}: ${(level * 100).toFixed(1)}% intensity${green ? ', green' : ''}${model.fieldDoses[index] ? `, ${model.fieldDoses[index]} field shifts` : ''}`);
+      node.querySelector('title').textContent = `${I.symptoms[index].name} · ${(level * 100).toFixed(1)}% · ${green ? 'Green' : drift[index] < -.002 ? 'Fading' : drift[index] > .002 ? 'Rising' : 'Steady'}`;
+      node.querySelector('.node-body').style.fill = levelColour(level);
+      const rounded = Math.round(level * 100);
+      node.querySelector('.node-symbol').textContent = !green && rounded === 10 ? '>10%' : `${rounded}%`;
+      node.querySelector('.node-mini').textContent = green ? 'GREEN' : drift[index] < -.002 ? '↓ FADING' : drift[index] > .002 ? '↑ RISING' : 'STEADY';
+      const callout = node.querySelector('.action-callout text');
+      if (callout && turnAnimation?.stage === 'response' && turnAnimation.type === 'node') {
+        const rising = level > turnAnimation.appliedLevel + .005;
+        node.classList.toggle('reactivated', rising);
+        node.querySelector('.action-callout').classList.toggle('reactivation-callout', rising);
+        callout.textContent = rising ? '↑ RISING AGAIN' : 'STILL REDUCED';
+      }
+    });
+    renderTime();
+  }
+
+  function renderTime() {
+    if (!continuous()) return;
+    const running = phase === 'busy' && turnAnimation?.stage === 'response';
+    $('model-time').textContent = `t = ${modelTime.toFixed(1)}`;
+    $('time-status').textContent = phase === 'won' ? 'All green · clock stopped' : phase === 'exhausted' ? 'Round complete' : running ? animationPaused ? 'Paused · resume to continue' : 'Time is passing' : phase === 'busy' ? 'Move applied · time paused' : 'Paused · choose a move';
+    $('watch-time').disabled = phase !== 'playing';
+    $('pause-time').disabled = !running;
+    $('pause-time').textContent = animationPaused ? '▷ Resume' : 'Ⅱ Pause';
+    $('pause-time').setAttribute('aria-label', animationPaused ? 'Resume the model response' : 'Pause the model response');
+    $('time-fill').style.width = `${responseProgress * 100}%`;
+    document.querySelector('.time-track').setAttribute('aria-valuenow', String(Math.round(responseProgress * 100)));
+    $('mean-level').textContent = percent(D.mean(state));
+    const extent = Math.max(modelTime, 1);
+    $('level-trace-line').setAttribute('d', timeTrace.map((sample, index) => `${index ? 'L' : 'M'}${(sample.time / extent * 600).toFixed(1)},${(50 - sample.mean * 48).toFixed(1)}`).join(' '));
+    $('level-trace').setAttribute('aria-label', `Average symptom intensity over model time, now ${percent(D.mean(state))} at time ${modelTime.toFixed(1)}`);
+  }
+
+  function renderModelChoice() {
+    const dynamic = continuous();
+    document.body.classList.toggle('continuous-model', dynamic);
+    document.querySelectorAll('[data-model]').forEach(button => {
+      button.setAttribute('aria-pressed', String(button.dataset.model === modelMode));
+      button.disabled = phase === 'busy';
+    });
+    document.querySelector('[data-type="self"]').hidden = !dynamic;
+    $('model-summary').textContent = dynamic ? 'Park, Waldorp & Vasconcelos · Gradual change, self feedback and directed influences.' : 'Symptoms switch on or off. Chance shapes the response.';
+    $('time-panel').hidden = !dynamic;
+    $('binary-key').hidden = dynamic;
+    $('continuous-key').hidden = !dynamic;
+    $('activity-label').textContent = dynamic ? 'SYMPTOMS ABOVE 10%' : 'ACTIVE SYMPTOMS';
+    $('activity-goal').textContent = dynamic ? 'All nine at 10% or below to win.' : 'Switch off every symptom to win.';
+    $('budget-costs').textContent = dynamic ? 'Every intervention costs 1 coin.' : 'Node: 1 · field: 2 · edge: 3 coins.';
+    $('timing-note').textContent = dynamic ? 'Watch up to 20 model-time units after treatment. All nine at ≤ 10% ends the round.' : 'The network responds for up to two sweeps. All nine green ends the round.';
+    document.querySelector('[data-type="field"] .intervention-copy > span').textContent = dynamic ? `Lower baseline drive β by ${D.settings.fieldDose.toFixed(2)} for this round.` : 'Make a symptom less likely to activate.';
+    document.querySelector('[data-type="node"] .intervention-copy > strong').firstChild.textContent = dynamic ? 'Reduce symptom intensity ' : 'Switch off a node ';
+    document.querySelector('[data-type="node"] .intervention-copy > span').textContent = dynamic ? 'Lower by 25 percentage points, stopping at 10%.' : 'A one-time push. It can turn back on.';
+    document.querySelector('.node-icon path').setAttribute('d', dynamic ? 'M4 5v14M10 9v10M16 13v6M3 19h18' : 'M12 3v9M6.4 6.4a8 8 0 1 0 11.2 0');
+    document.querySelector('[data-type="edge"] .intervention-copy > span').textContent = dynamic ? 'Remove one influence between symptoms.' : 'Break one connection for this round.';
+    document.querySelector('.edge-icon').textContent = dynamic ? '→' : '↔';
   }
 
   function renderStats() {
@@ -629,13 +1025,14 @@
     const green = M.N - count;
     $('recovery-count').replaceChildren(document.createTextNode(String(green)), element('span', 'metric-muted', ` / ${M.N}`));
     $('recovery-fill').style.width = `${green / M.N * 100}%`;
-    document.querySelector('[role="progressbar"]').setAttribute('aria-valuenow', String(green));
+    document.querySelector('.outlook-track').setAttribute('aria-valuenow', String(green));
     $('move-count').textContent = `${spent} ${spent === 1 ? 'coin' : 'coins'} spent`;
-    $('network-badge').textContent = phase === 'busy' ? (turnAnimation?.stage === 'applied' ? 'MOVE APPLIED' : `RESPONSE · ${turnAnimation?.sweep || 1} / 2`) : phase === 'won' ? 'LOOP BROKEN' : phase === 'exhausted' ? 'ROUND COMPLETE' : 'YOUR MOVE';
+    $('network-badge').textContent = phase === 'busy' ? (turnAnimation?.stage === 'applied' ? 'MOVE APPLIED' : continuous() ? animationPaused ? 'TIME PAUSED' : 'NETWORK EVOLVING' : `RESPONSE · ${turnAnimation?.sweep || 1} / 2`) : phase === 'won' ? 'LOOP BROKEN' : phase === 'exhausted' ? 'ROUND COMPLETE' : 'YOUR MOVE';
     document.body.classList.toggle('busy', phase === 'busy');
     $('restart').disabled = phase === 'busy';
     $('undo').disabled = !history.length || phase === 'busy' || remaining < undoCost;
     $('undo').title = !history.length ? 'No actions to undo' : remaining < undoCost ? 'No coins left for undo' : 'Undo costs 1 coin. Earlier spending stays spent.';
+    renderTime();
   }
 
   function renderForecast() {
@@ -651,7 +1048,10 @@
       column.append(element('strong', '', percent(probability)), element('span', '', label));
       comparison.append(column);
     }
-    area.append(comparison, element('p', '', `Chance of all nine nodes being green after six sweeps. A probability, not a promise. Applying this treatment costs ${coinLabel(treatmentCosts[type])}.`));
+    if (continuous()) {
+      const levels = element('p', 'forecast-levels', `Expected average intensity: ${percent(cached.baselineMean)} → ${percent(cached.projectedMean)} with this move.`);
+      area.append(comparison, levels, element('p', '', `Estimated chance of all nine intensities being ≤ 10% at t + ${D.settings.forecastTime}. ${cached.paths} simulated paths per scenario; approximate, not a promise. Zero means no successes in this sample. Treatment costs ${coinLabel(treatmentCost(type))}.`));
+    } else area.append(comparison, element('p', '', `Chance of all nine nodes being green after six sweeps. A probability, not a promise. Applying this treatment costs ${coinLabel(treatmentCost(type))}.`));
   }
 
   function renderSelection() {
@@ -660,34 +1060,42 @@
       button.classList.toggle('selected', selected);
       button.setAttribute('aria-pressed', String(selected));
       button.disabled = phase === 'busy' || phase === 'won';
-      button.querySelector('.intervention-price').textContent = coinLabel(treatmentCosts[button.dataset.type]);
+      button.querySelector('.intervention-price').textContent = coinLabel(treatmentCost(button.dataset.type));
     });
-    const price = treatmentCosts[type];
+    const price = treatmentCost(type);
     const remaining = coinsRemaining();
     $('treatment-cost').textContent = String(price);
     const hasTarget = target !== null;
     $('target-kicker').textContent = hasTarget ? (type === 'edge' ? 'SELECTED CONNECTION' : 'SELECTED SYMPTOM') : (type === 'edge' ? 'SELECT A CONNECTION' : 'SELECT A SYMPTOM');
     $('target-name').textContent = hasTarget ? targetName(type, target) : 'Where will you intervene?';
     let description = initialMessages[type];
+    if (continuous()) description = type === 'node' ? 'Choose a symptom above 10%. Reduce its intensity by 25 percentage points, with a floor of 10%, then watch it evolve.' : type === 'edge' ? 'Choose an arrow between symptoms. Remove only that direction of influence for this round.' : type === 'self' ? initialMessages.self : 'Choose a symptom. Lower its baseline activation drive β for this round.';
     let detail = '';
     if (hasTarget) {
       if (type === 'node') {
-        description = M.isOn(state, target) ? 'Switch this symptom off once. It will be free to reactivate when the network evolves.' : 'This symptom is already inactive. Choose an active symptom to switch off, or try a field intervention.';
+        description = M.isOn(state, target) ? continuous() ? `Current intensity: ${(state[target] * 100).toFixed(1)}%. Reduce it by 25 percentage points, stopping at 10%. This is a one-time push; intensity remains free to rise or fade as time passes.` : 'Switch this symptom off once. It will be free to reactivate when the network evolves.' : continuous() ? 'This symptom is already in the green band (≤ 10%). Choose a higher-intensity symptom or try another intervention.' : 'This symptom is already inactive. Choose an active symptom to switch off, or try a field intervention.';
         detail = `One-time state change · ${coinLabel(price)}`;
       } else if (type === 'edge') {
-        description = 'Remove this connection in both directions. The two symptoms can still influence each other through other paths.';
+        description = continuous() ? 'Remove this arrow only, from source to target. A reverse arrow, if present, and other paths stay in place.' : 'Remove this connection in both directions. The two symptoms can still influence each other through other paths.';
         detail = `Lasts for this round · ${coinLabel(price)}`;
+      } else if (type === 'self') {
+        description = model.self[target] > .10 ? `Lower this symptom’s self-feedback αᵢᵢ from ${model.self[target].toFixed(2)} to 0.10. This weakens self-reinforcement without setting its intensity.` : 'This loop is already at 0.10. Choose another symptom or a different intervention.';
+        detail = `Self-feedback: ${model.self[target].toFixed(2)} · Lasts for this round · ${coinLabel(price)}`;
       } else {
-        description = 'Lower this symptom’s activation parameter. Its tendency to switch on decreases, but its current state is not forced to change.';
+        description = continuous() ? `Lower β by ${D.settings.fieldDose} (currently ${model.thresholds[target].toFixed(2)}). This changes the symptom’s future rate of change, rather than setting its intensity.` : 'Lower this symptom’s activation parameter. Its tendency to switch on decreases, but its current state is not forced to change.';
         detail = `Lasts for this round · ${model.fieldDoses[target]} previous ${model.fieldDoses[target] === 1 ? 'shift' : 'shifts'} · ${coinLabel(price)}`;
       }
     }
     if (phase === 'busy' && turnAnimation) {
       $('target-kicker').textContent = turnAnimation.stage === 'applied' ? 'YOUR MOVE HAS BEEN APPLIED' : 'NOW THE NETWORK RESPONDS';
       if (turnAnimation.stage === 'applied') {
-        description = type === 'node' ? 'This symptom is now off. Your move registered. Next, its neighbours will have a chance to reactivate it.' : type === 'edge' ? 'This connection has been removed. Next, watch how the network responds without this direct influence.' : 'The activation field has been lowered. The symptom is less likely to switch on; its current state is not forced to change.';
+        description = type === 'node' ? continuous() ? `Intensity was reduced from ${percent(turnAnimation.beforeLevel)} to ${percent(turnAnimation.appliedLevel)}. Time is paused briefly to show your move; intensity can still rise or fade.` : 'This symptom is now off. Your move registered. Next, its neighbours will have a chance to reactivate it.' : type === 'edge' ? 'This connection has been removed. Next, watch how the network responds without this direct influence.' : type === 'self' ? 'Self-feedback is now 0.10. Its current intensity was not reset. Watch how the weaker self-reinforcement changes the response.' : 'The activation field has been lowered. The symptom is less likely to switch on; its current state is not forced to change.';
       } else description = type === 'node' && M.isOn(state, target) ? 'The symptom has reactivated after your move. It was successfully switched off; the network then turned it back on.' : `The intervention was applied. You are now watching the network’s response: sweep ${turnAnimation.sweep} of 2.`;
       detail = `${coinLabel(price)} spent · Treatment applied`;
+    }
+    if (continuous() && phase === 'busy' && turnAnimation?.stage === 'response') {
+      description = animationPaused ? 'The clock and intensities are paused. Resume to continue watching the same response.' : 'Intensities are evolving under the model. Watch the percentages, colours and clock as symptoms fade or rebound.';
+      detail = `t = ${modelTime.toFixed(1)} · ${turnAnimation.type === 'wait' ? 'No treatment or coin charge' : 'Treatment applied'}`;
     }
     if (phase === 'won') {
       $('target-kicker').textContent = 'ROUND COMPLETE';
@@ -700,7 +1108,7 @@
     $('target-detail').hidden = !detail;
     const enabled = validTarget() && phase === 'playing';
     $('apply').disabled = !enabled || remaining < price;
-    $('apply-label').textContent = phase === 'busy' ? (turnAnimation?.stage === 'applied' ? '✓ Move applied' : 'Network responding…') : phase === 'won' ? 'Loop broken' : phase === 'exhausted' ? 'No coins left' : !validTarget() ? 'Select a target' : remaining < price ? `Need ${coinLabel(price)}` : type === 'node' ? 'Switch symptom off' : type === 'edge' ? 'Remove connection' : 'Shift this field';
+    $('apply-label').textContent = phase === 'busy' ? (turnAnimation?.stage === 'applied' ? '✓ Move applied' : 'Network responding…') : phase === 'won' ? 'Loop broken' : phase === 'exhausted' ? 'No coins left' : !validTarget() ? (type === 'self' && target !== null ? 'Loop already at 0.10' : 'Select a target') : remaining < price ? `Need ${coinLabel(price)}` : type === 'node' ? continuous() ? 'Reduce intensity' : 'Switch symptom off' : type === 'edge' ? 'Remove connection' : type === 'self' ? 'Lower loop to 0.10' : 'Shift this field';
     const cached = purchased.has(cacheKey());
     $('buy-forecast').disabled = !enabled || remaining < forecastCost || cached;
     $('buy-forecast').firstElementChild.lastChild.textContent = cached ? ' Forecast purchased' : ' Buy a forecast';
@@ -721,14 +1129,17 @@
       const row = element('div', `history-row${entry.undone ? ' undone-action' : ''}`);
       row.append(element('span', 'history-number', String(index + 1)));
       const description = element('div', 'history-description');
-      const actionLabel = entry.kind === 'undo' ? 'Undo' : entry.kind === 'forecast' ? 'Forecast purchased' : entry.type === 'node' ? 'Switched off' : entry.type === 'edge' ? 'Connection removed' : 'Field shifted';
-      description.append(element('strong', '', `${actionLabel} · ${targetName(entry.type, entry.target)}${entry.undone ? ' · undone' : ''}`));
+      const actionLabel = entry.kind === 'undo' ? 'Undo' : entry.kind === 'forecast' ? 'Forecast purchased' : entry.type === 'node' ? continuous() ? 'Intensity reduced' : 'Switched off' : entry.type === 'edge' ? 'Connection removed' : entry.type === 'self' ? 'Self-feedback lowered' : 'Field shifted';
+      description.append(element('strong', '', `${entry.kind === 'wait' ? 'Watched time pass' : `${actionLabel} · ${targetName(entry.type, entry.target)}`}${entry.undone ? ' · undone' : ''}`));
       if (entry.kind === 'undo') {
         description.append(element('small', '', `${coinLabel(entry.cost)} · Reversed the last action. Earlier spending stays spent.`));
         row.append(description, element('span', 'history-activity', 'Undo fee'));
       } else if (entry.kind === 'forecast') {
         description.append(element('small', '', `${coinLabel(entry.cost)} · A paid tip. The network did not advance.`));
         row.append(description, element('span', 'history-forecast', `${percent(entry.forecast.projected)} predicted`));
+      } else if (continuous() && entry.finalState !== undefined) {
+        description.append(element('small', '', `${coinLabel(entry.cost)} · t = ${entry.beforeTime.toFixed(1)} → ${entry.finalTime.toFixed(1)} · average intensity ${percent(D.mean(entry.beforeState))} → ${percent(D.mean(entry.finalState))}`));
+        row.append(description, element('span', 'history-activity', `${D.N - D.activeCount(entry.finalState)} / 9 green`));
       } else if (entry.finalState === undefined) {
         description.append(element('small', '', `${coinLabel(entry.cost)} · Intervention applied; waiting for the network response.`));
         row.append(description, element('span', 'history-activity', 'Responding…'));
@@ -815,6 +1226,7 @@
   }
 
   function render(previousState = state, interventionTarget = null) {
+    renderModelChoice();
     drawNetwork(previousState, interventionTarget);
     renderStats(); renderSelection(); renderHistory(); renderResult(); renderCelebration();
   }
@@ -825,9 +1237,75 @@
     drawNetwork(); renderSelection();
   }
 
+  function captureDynamic() {
+    return { model: D.cloneModel(model), state: [...state], random: random.snapshot(),
+      time: modelTime, trace: timeTrace.map(sample => ({ ...sample })),
+      purchased: [...purchased], version: treatmentVersion };
+  }
+
+  async function animateDynamic(entry, duration) {
+    const startTime = modelTime;
+    const response = D.trajectory(model, state, random, duration, true);
+    animationPaused = false;
+    turnAnimation = { type: entry.type, target: entry.target, stage: 'response', appliedLevel: entry.appliedLevel };
+    timeTrace.push({ time: modelTime, mean: D.mean(state) });
+    drawNetwork(); renderStats(); renderSelection();
+    for (let index = 1; index < response.samples.length; index++) {
+      // Reduced motion changes presentation only, never the simulated path.
+      if (reducedMotion && index % 20 !== 0 && index !== response.samples.length - 1) continue;
+      while (animationPaused || document.hidden || $('learn-dialog').open) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      const sample = response.samples[index];
+      state = [...sample.state]; modelTime = startTime + sample.time;
+      responseProgress = sample.time / duration;
+      timeTrace.push({ time: modelTime, mean: D.mean(state) });
+      if (timeTrace.length > 800) timeTrace = timeTrace.filter((_, i) => i % 2 === 0 || i === timeTrace.length - 1);
+      updateDynamicVisuals(); renderStats(); renderSelection();
+      await new Promise(resolve => setTimeout(resolve, reducedMotion ? 180 : 50));
+    }
+    state = [...response.state]; modelTime = startTime + response.elapsed;
+    entry.finalState = [...state]; entry.finalTime = modelTime;
+    history.push(entry); turnAnimation = null;
+    phase = isWon() ? 'won' : coinsRemaining() <= 0 ? 'exhausted' : 'playing';
+    setMessage(phase === 'won' ? 'All nine intensities are at 10% or below together. You earned the Loop Breaker award!' : `Time advanced to ${modelTime.toFixed(1)}. Average intensity is ${percent(D.mean(state))}; ${9 - D.activeCount(state)} of nine nodes are green. Choose a move or watch more time pass.`, phase === 'won' ? 'You broke the loop.' : 'Network response complete · time paused');
+    render();
+  }
+
+  async function applyDynamicTreatment() {
+    const entry = { kind: 'treatment', type, target, cost: treatmentCost(type),
+      before: captureDynamic(), beforeState: [...state], beforeTime: modelTime };
+    ledger.push(entry); phase = 'busy'; responseProgress = 0;
+    state = D.intervene(model, state, type, target);
+    if (type === 'node') entry.appliedLevel = state[target];
+    treatmentVersion++; purchased.clear();
+    turnAnimation = { type, target, stage: 'applied', beforeLevel: entry.beforeState[target], appliedLevel: entry.appliedLevel };
+    setMessage(type === 'node' ? `Intensity was reduced from ${percent(entry.beforeState[target])} to ${percent(state[target])}. It is free to rise or fade when time resumes.` : type === 'edge' ? 'This arrow is removed. Its reverse direction, if present, stays in place.' : type === 'self' ? 'Self-feedback is now 0.10. The symptom’s current intensity is unchanged; weaker self-reinforcement acts as time passes.' : 'The baseline activation drive is lower. Watch the intensity change as time resumes.', `✓ ${targetName(type, target)} · ${coinLabel(entry.cost)} spent`);
+    render();
+    const visibleTarget = $('network').querySelector(type === 'edge' ? '.edge-cut' : `[data-node="${target}"]`);
+    if (visibleTarget) {
+      const bounds = visibleTarget.getBoundingClientRect();
+      if (bounds.top < 24 || bounds.bottom > window.innerHeight - 24) visibleTarget.scrollIntoView({ block: 'center', behavior: reducedMotion ? 'instant' : 'smooth' });
+    }
+    await sleep(1600);
+    await animateDynamic(entry, D.settings.responseTime);
+  }
+
+  async function watchTime() {
+    if (!continuous() || phase !== 'playing') return;
+    const entry = { kind: 'wait', type: 'wait', target: null, cost: 0,
+      before: captureDynamic(), beforeState: [...state], beforeTime: modelTime };
+    ledger.push(entry); phase = 'busy'; responseProgress = 0;
+    treatmentVersion++; purchased.clear();
+    setMessage('No intervention is applied and no coin is spent. Watch the network evolve under its current parameters.', 'Letting time pass · +10 model-time units');
+    render();
+    await animateDynamic(entry, D.settings.watchTime);
+  }
+
   async function applyTreatment() {
-    if (phase !== 'playing' || !validTarget() || coinsRemaining() < treatmentCosts[type]) return;
-    const entry = { kind: 'treatment', type, target, cost: treatmentCosts[type], beforeState: state, sweepCounts: [] };
+    if (phase !== 'playing' || !validTarget() || coinsRemaining() < treatmentCost(type)) return;
+    if (continuous()) { await applyDynamicTreatment(); return; }
+    const entry = { kind: 'treatment', type, target, cost: treatmentCost(type), beforeState: state, sweepCounts: [] };
     ledger.push(entry);
     const label = targetName(type, target);
     phase = 'busy';
@@ -868,6 +1346,17 @@
 
   function buyForecast() {
     if (phase !== 'playing' || !validTarget() || coinsRemaining() < forecastCost || purchased.has(cacheKey())) return;
+    if (continuous()) {
+      const before = captureDynamic();
+      const forecast = D.forecast(model, state, type, target);
+      purchased.set(cacheKey(), forecast);
+      const entry = { kind: 'forecast', type, target, cost: forecastCost, forecast, before };
+      history.push(entry); ledger.push(entry);
+      if (coinsSpent() >= budget) phase = 'exhausted';
+      setMessage(`Estimated ${percent(forecast.projected)} all-green probability at t + ${D.settings.forecastTime}; expected average intensity ${percent(forecast.projectedMean)}. Based on ${forecast.paths} simulated paths. The clock and round’s random sequence have not advanced.`, 'Forecast purchased · 1 coin');
+      render();
+      return;
+    }
     const baseline = M.forecast(model, state).healthyProbability;
     const alteredModel = { edges: model.edges.map(e => ({ ...e })), thresholds: [...model.thresholds], fieldDoses: [...model.fieldDoses] };
     const alteredState = M.intervene(alteredModel, state, type, target);
@@ -883,8 +1372,10 @@
   }
 
   function resetModel() {
-    model = M.createModel(); state = M.SIZE - 1; random = M.randomGenerator(seed);
+    model = M.createModel(); state = continuous() ? D.initialState() : M.SIZE - 1; random = M.randomGenerator(seed);
     history = []; ledger = []; purchased = new Map(); treatmentVersion = 0; phase = 'playing'; turnAnimation = null;
+    modelTime = 0; timeTrace = continuous() ? [{ time: 0, mean: D.mean(state) }] : [];
+    animationPaused = false; responseProgress = 0;
   }
 
   function restart() {
@@ -896,6 +1387,19 @@
 
   function undo() {
     if (phase === 'busy' || !history.length || coinsRemaining() < undoCost) return;
+    if (continuous()) {
+      const removed = history.pop();
+      removed.undone = true;
+      ledger.push({ kind: 'undo', type: removed.type, target: removed.target, cost: undoCost });
+      const before = removed.before;
+      model = D.cloneModel(before.model); state = [...before.state]; random.restore(before.random);
+      modelTime = before.time; timeTrace = before.trace.map(sample => ({ ...sample }));
+      purchased = new Map(before.purchased); treatmentVersion = before.version;
+      responseProgress = 0; animationPaused = false; turnAnimation = null; target = null;
+      phase = coinsRemaining() <= 0 ? 'exhausted' : isWon() ? 'won' : 'playing';
+      setMessage('The last action, clock and random sequence are restored. Earlier spending stays spent.', 'Undo applied · 1 coin spent');
+      render(); return;
+    }
     const removed = history[history.length - 1];
     removed.undone = true;
     const spending = ledger;
@@ -926,6 +1430,19 @@
     type = button.dataset.type; target = null;
     drawNetwork(); renderSelection();
   }));
+  document.querySelectorAll('[data-model]').forEach(button => button.addEventListener('click', () => {
+    if (phase === 'busy' || modelMode === button.dataset.model) return;
+    modelMode = button.dataset.model; M = continuous() ? D : I;
+    resetModel(); target = null; type = 'node';
+    setMessage(continuous() ? 'Choose a treatment, or Watch +10 to see how intensities evolve. The clock pauses between moves.' : 'A fresh Ising round. Choose an intervention, then its target.');
+    render();
+  }));
+  $('watch-time').addEventListener('click', watchTime);
+  $('pause-time').addEventListener('click', () => {
+    if (!continuous() || phase !== 'busy' || turnAnimation?.stage !== 'response') return;
+    animationPaused = !animationPaused;
+    renderStats(); renderSelection();
+  });
   $('apply').addEventListener('click', applyTreatment);
   $('buy-forecast').addEventListener('click', buyForecast);
   $('restart').addEventListener('click', restart);
@@ -941,7 +1458,9 @@
   $('close-learn').addEventListener('click', () => dialog.close());
   $('back-to-game').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
-  resetModel(); render();
+  resetModel();
+  if (continuous()) setMessage('Choose a treatment, or Watch +10 to see how intensities evolve. The clock pauses between moves.');
+  render();
 })();
 
 </script>
