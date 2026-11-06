@@ -11,8 +11,8 @@ The game runs in a browser. No account, installation, or API key is needed.
 Choose an intervention and click its target in the network:
 
 - **Switch off a node (1 coin):** make a symptom inactive once. Its neighbours can reactivate it.
-- **Remove an edge (3 coins):** remove one symmetric connection for the round.
 - **Shift a field (2 coins):** lower a node's activation parameter by 1.5 for the round. This reduces its tendency to become active; it does not force its current state.
+- **Remove an edge (3 coins):** remove one symmetric connection for the round.
 
 The six-coin budget counts coins spent, rather than the number of actions. A treatment must be affordable at its full price. The move is shown first, then the network responds for up to two sweeps. A sweep consists of nine random node-update opportunities. When all nine nodes are green together, the round ends with a Loop Breaker trophy and confetti.
 

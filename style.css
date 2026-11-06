@@ -86,6 +86,7 @@
 .intervention-copy > strong { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
 .intervention-price { display: inline-block; flex-shrink: 0; border-radius: 4px; padding: 2px 6px; font-size: 12px; line-height: 1.5; font-weight: 600; white-space: nowrap; color: #3f5b3c; background: #dfe8d6; }
 .button-cost .cost-value { font: inherit; color: inherit; }
+.node-icon svg { display: block; width: 25px; height: 25px; margin: auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .play-layout { grid-template-columns: minmax(0, 1fr) 370px; }
 .treatment-panel .section-kicker { font-size: 11px; color: #596c55; letter-spacing: 1.1px; }
 .treatment-title h2 { font-size: 21px; }
